@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <title>一梦工作室 — Design × technology</title>
+  <meta name="description" content="一梦团队：以跨领域的视角，构建 AI 工具、社区自动化与数字产品。">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23002FA7'/%3E%3Ctext x='16' y='24' text-anchor='middle' font-family='Arial' font-size='25' font-weight='bold' fill='white'%3E1%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
+</head>
+<body>
+  <header class="header">
+    <div class="header-actions"><button id="motion" aria-pressed="false" aria-label="暂停动画">暂停动态</button><button id="menu" aria-expanded="false" aria-controls="navigation">MENU <span class="menu-icon">•••</span></button></div>
+  </header>
+  <nav id="navigation" hidden aria-label="主导航"><a href="#top">首页 <small>TOP</small></a><a href="#projects">项目实践 <small>PROJECTS</small></a></nav>
+  <main>
+    <section id="top" class="hero" aria-labelledby="hero-title">
+      <div id="tiles" class="tiles" aria-hidden="true"></div>
+      <h1 id="hero-title" class="sr-only">一梦工作室</h1>
+      <div id="about" class="sr-only" aria-hidden="true">
+        <h2>Design × technology</h2>
+        <p>一梦是一家致力于通过自由且独特的想法，打造融合数字与现实、并注重“体验”的创意团队。</p>
+        <p>从社区自动化到 AI 服务，从效率工具到专业工作流，我们让复杂的需求，成为清晰、可用的数字产品。</p>
+        <p>无论基于什么创意来创作，我们都将始终从“体验”的设计出发进行构思。</p>
+      </div>
+      <a class="scroll" href="#about" aria-label="了解一梦"><span id="scroll-text">SCROLL TO EXPLORE</span><span class="scroll-line"></span></a>
+      <span class="edge-label">© 一梦工作室</span>
+      <button id="turn" class="interaction-hint" aria-label="翻到工作室介绍">翻到介绍</button>
+    </section>
+<div class="project-gradient" id="team">
+<section id="projects" class="projects-accordion" aria-labelledby="projects-title">
+<div class="projects-heading"><h2 id="projects-title">PROJECTS</h2><p>产品实践 / 项目与成果</p></div>
+<div class="project-list"><article class="project-row" data-project-row="community">
+<h3 class="project-row-heading"><button class="project-toggle" id="project-community" aria-expanded="false" aria-controls="panel-community"><span class="project-number">01</span><span class="project-heading-copy"><span class="project-name">社区 Bot 平台</span><span class="project-one-line">面向 62,000 人社区的模块化 Bot 产品与运营后台。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
+<div class="project-reveal" id="panel-community" role="region" aria-labelledby="project-community" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">COMMUNITY BOT PLATFORM</p><p class="project-summary">面向 62,000 人社区的 Bot 产品，整合成员身份、角色权限、知识答疑、资源运营与管理后台。</p><dl><dt>产品功能</dt><dd>身份审核与角色分配、知识匹配与自动回复、资源分类与分发、运营数据管理。</dd><dt>技术能力</dt><dd>平台 API 集成、规则驱动的权限处理、知识匹配与自动化任务协同。</dd></dl><div class="project-tags"><span>Bot 集成</span><span>权限规则</span><span>知识检索</span><span>任务自动化</span></div></div><div class="project-visual"><div class="visual-top"><span>社区 Bot 平台</span><span>功能与数据示意</span></div><div class="project-total"><span>社区成员</span><div><strong>62,000</strong><small>人</small></div></div><div class="system-flow"><span>成员身份</span><i>→</i><span>智能答疑</span><i>→</i><span>资源管理</span></div><div class="visual-stats"><div><strong >4,892</strong><span>当日自动解答</span></div><div><strong >2,708</strong><span>管理资源</span></div><div><strong >92%</strong><span>自动解答占比</span></div></div></div></div></div></div>
+</article>
+<article class="project-row" data-project-row="ai">
+<h3 class="project-row-heading"><button class="project-toggle" id="project-ai" aria-expanded="false" aria-controls="panel-ai"><span class="project-number">02</span><span class="project-heading-copy"><span class="project-name">AI 服务网关</span><span class="project-one-line">连接多种模型服务的统一 API 接入与管理系统。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
+<div class="project-reveal" id="panel-ai" role="region" aria-labelledby="project-ai" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">AI SERVICE GATEWAY</p><p class="project-summary">为应用提供统一的模型服务入口，集中管理调用、接口密钥与使用记录。</p><dl><dt>产品功能</dt><dd>多模型接入、请求路由、服务中继与调用统计。</dd><dt>技术能力</dt><dd>通过统一接口连接不同模型服务，将分散的调用与管理流程集中到同一个系统。</dd></dl><div class="project-tags"><span>接口集成</span><span>请求路由</span><span>使用统计</span></div></div><div class="project-visual"><div class="visual-top"><span>AI 服务网关</span><span>功能与数据示意</span></div><div class="project-total"><span>在线模型服务</span><div><strong>12</strong><small>个</small></div></div><div class="system-flow"><span>业务应用</span><i>→</i><span>统一 API 网关</span><i>→</i><span>模型服务</span></div><div class="visual-stats"><div><strong >5,265</strong><span>当日请求</span></div><div><strong class="stat-text">密钥管理</strong><span>访问控制</span></div><div><strong class="stat-text">调用记录</strong><span>使用统计</span></div></div></div></div></div></div>
+</article>
+<article class="project-row" data-project-row="workflow">
+<h3 class="project-row-heading"><button class="project-toggle" id="project-workflow" aria-expanded="false" aria-controls="panel-workflow"><span class="project-number">03</span><span class="project-heading-copy"><span class="project-name">专利管理系统</span><span class="project-one-line">覆盖申请、授权、档案与年费的专利业务管理工具。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
+<div class="project-reveal" id="panel-workflow" role="region" aria-labelledby="project-workflow" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">PATENT MANAGEMENT</p><p class="project-summary">面向专利管理的业务工具，将申请状态、档案与年费记录组织成可追踪的工作流。</p><dl><dt>产品功能</dt><dd>专利档案管理、申请状态跟踪、授权记录与年费管理。</dd><dt>技术能力</dt><dd>围绕专利生命周期组织业务数据，让状态、记录与待办事项在同一界面中关联呈现。</dd></dl><div class="project-tags"><span>业务建模</span><span>数据管理</span><span>状态跟踪</span></div></div><div class="project-visual"><div class="visual-top"><span>专利管理系统</span><span>功能与数据示意</span></div><div class="project-total"><span>系统管理的专利记录</span><div><strong>328</strong><small>项</small></div></div><div class="system-flow"><span>申请</span><i>→</i><span>授权</span><i>→</i><span>年费管理</span></div><div class="visual-stats"><div><strong >201</strong><span>已授权记录</span></div><div><strong >76</strong><span>申请中记录</span></div><div><strong >28</strong><span>年费待缴记录</span></div></div></div></div></div></div>
+</article></div>
+<p class="data-caption">社区规模按最新确认的 62,000 人更新；其余数据来自对应项目的界面统计快照。</p>
+</section></div>
+  </main>
+  <footer><span>一梦工作室</span><a href="#top">回到顶部 ↑</a></footer>
+  <div id="custom-cursor" aria-hidden="true"><span class="cursor-ring"><span class="cursor-symbol"></span></span><span class="cursor-dot"></span></div>
+  <template id="front-scene"><div class="scene front-scene"><div class="hero-copy"><div class="studio-title">一梦工作室</div></div></div></template>
+  <template id="back-scene"><div class="scene back-scene"><div class="blue-intro">
+    <div class="intro-title"><span>Design</span><span class="intro-second"><span class="multiply">×</span> technology</span></div>
+    <div class="intro-copy">
+      <p>一梦是一家致力于通过自由且独特的想法，打造融合数字与现实、并注重“体验”的创意团队。</p>
+      <p>从社区自动化到 AI 服务，从效率工具到专业工作流，我们让复杂的需求，成为清晰、可用的数字产品。</p>
+      <p>无论基于什么创意来创作，我们都将始终从“体验”的设计出发进行构思。</p>
+    </div>
+  </div></div></template>
+</body>
+</html>
