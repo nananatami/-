@@ -6,4 +6,5 @@ preview-*.png
 .sites-checkout*/
 *.tar
 *.tar.gz
+*.zip
 node_modules/

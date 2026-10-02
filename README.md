@@ -1,5 +1,9 @@
 # 一梦动态首屏样稿
 
+网站地址：https://nananatami.github.io/-/
+
+GitHub Pages 从 `main` 分支根目录发布。修改根目录的 `index.html`、`style.css`、`main.js` 或 `assets` 后，提交并推送到 `main` 即会触发更新；无需修改 `dist` 副本。`.nojekyll` 用于直接发布静态文件。
+
 本地预览：运行 `node server.cjs`，打开 http://127.0.0.1:5173 。
 
 黑白 + 克莱因蓝（#002FA7），原创 CSS 3D 翻转网格。自动逐列翻转、指针 / 触碰互动、暂停动态、减少动态偏好、移动端布局。首屏标题为“一梦工作室”，下方是 Design × technology 蓝色介绍区与三项业务能力。
