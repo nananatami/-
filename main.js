@@ -170,24 +170,37 @@ projectButtons.forEach((button,index)=>{
 const cursor=document.querySelector('#custom-cursor');
 const cursorSymbol=cursor.querySelector('.cursor-symbol');
 const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)');
-let cursorX=0,cursorY=0,cursorFrame=null;
-function hideCursor(){if(cursorFrame!==null){cancelAnimationFrame(cursorFrame);cursorFrame=null;}document.body.classList.remove('has-custom-cursor');cursor.classList.remove('cursor-pressed');}
+let cursorX=0,cursorY=0,cursorFrame=null,trailX=0,trailY=0,lastCursorTime=0;
+function hideCursor(){if(cursorFrame!==null){cancelAnimationFrame(cursorFrame);cursorFrame=null;}lastCursorTime=0;document.body.classList.remove('has-custom-cursor');cursor.classList.remove('cursor-pressed');}
 function updateCursorTarget(target){
   const control=target instanceof Element?target.closest('button,a,[role="button"]'):null;
   cursor.classList.toggle('cursor-interactive',Boolean(control));
   const darkSurface=target instanceof Element && target.closest('.hero,.header,.project-visual,.project-row.is-open,.project-row:hover');
   cursor.classList.toggle('cursor-on-dark',Boolean(darkSurface));
-  cursorSymbol.textContent=control?.classList.contains('project-toggle')?(control.getAttribute('aria-expanded')==='true'?'×':'+'):(control?'↗':'');
+  cursorSymbol.textContent='';
+}
+function drawCursor(time){
+  const staticMotion=paused||reducedMotion.matches;
+  const dt=lastCursorTime?Math.min(time-lastCursorTime,40):16;
+  const blend=staticMotion?1:1-Math.exp(-dt/65);
+  trailX+=(cursorX-trailX)*blend;trailY+=(cursorY-trailY)*blend;
+  const dx=cursorX-trailX,dy=cursorY-trailY;
+  const base=cursor.classList.contains('cursor-interactive')?32:20;
+  cursor.style.transform=`translate3d(${trailX}px,${trailY}px,0)`;
+  cursor.style.setProperty('--cursor-width',`${base+Math.min(Math.abs(dx)*1.4,160)}px`);
+  cursor.style.setProperty('--cursor-height',`${base+Math.min(Math.abs(dy)*.75,60)}px`);
+  cursor.style.setProperty('--dot-x',`${dx}px`);cursor.style.setProperty('--dot-y',`${dy}px`);
+  document.body.classList.add('has-custom-cursor');
+  lastCursorTime=time;
+  if(!staticMotion && Math.abs(dx)+Math.abs(dy)>.12){cursorFrame=requestAnimationFrame(drawCursor);}
+  else{cursorFrame=null;lastCursorTime=0;}
 }
 window.addEventListener('pointermove',e=>{
   if(e.pointerType!=='mouse' || !finePointer.matches){hideCursor();return;}
   cursorX=e.clientX;cursorY=e.clientY;
+  if(!document.body.classList.contains('has-custom-cursor')){trailX=cursorX;trailY=cursorY;}
   updateCursorTarget(e.target);
-  if(cursorFrame!==null)return;
-  cursorFrame=requestAnimationFrame(()=>{
-    cursor.style.transform=`translate3d(${cursorX}px,${cursorY}px,0)`;
-    document.body.classList.add('has-custom-cursor');cursorFrame=null;
-  });
+  if(cursorFrame===null)cursorFrame=requestAnimationFrame(drawCursor);
 },{passive:true});
 window.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&finePointer.matches)cursor.classList.add('cursor-pressed');},{passive:true});
 window.addEventListener('pointerup',()=>cursor.classList.remove('cursor-pressed'),{passive:true});
