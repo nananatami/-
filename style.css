@@ -40,3 +40,7 @@
 
 /* The business page slides over the stationary introduction during native scrolling. */
 @media(prefers-reduced-motion:reduce){.hero{position:relative}}
+/* Four horizontal openings merge before project content appears. */
+.project-gradient{mask-repeat:no-repeat;mask-size:100% 100%}
+.projects-accordion{opacity:var(--project-entrance,1)}
+@media(prefers-reduced-motion:reduce){.project-gradient{mask-image:none!important}.projects-accordion{opacity:1}}

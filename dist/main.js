@@ -203,3 +203,39 @@ document.addEventListener('keydown',e=>{if(e.key==='Tab')hideCursor();});
 finePointer.addEventListener('change',()=>{if(!finePointer.matches)hideCursor();});
 
 window.addEventListener('scroll',()=>{if(document.body.classList.contains('has-custom-cursor'))updateCursorTarget(document.elementFromPoint(cursorX,cursorY));},{passive:true});
+
+// Horizontal bands open with scroll, then join into one continuous business page.
+const businessPage=document.querySelector('#team');
+const clamp01=value=>Math.max(0,Math.min(1,value));
+let bandFrame=null;
+function paintBusinessBands(){
+  bandFrame=null;
+  const viewport=document.documentElement.clientHeight;
+  const top=businessPage.getBoundingClientRect().top;
+  const progress=clamp01((viewport-top)/(viewport*.55));
+  if(reducedMotion.matches || progress>=1){
+    businessPage.style.maskImage='none';
+    businessPage.style.setProperty('--project-entrance','1');
+    return;
+  }
+  const bandHeight=viewport*.11;
+  const stops=['transparent 0px'];
+  for(let i=0;i<4;i++){
+    const local=clamp01(progress*1.35-(3-i)*.08);
+    const eased=local*local*(3-2*local);
+    const start=i*bandHeight;
+    const edge=start+Math.max(0,bandHeight*(1-eased)-2);
+    stops.push('transparent '+start+'px','transparent '+edge+'px','#000 '+edge+'px','#000 '+((i+1)*bandHeight)+'px');
+  }
+  stops.push('#000 100%');
+  businessPage.style.maskImage='linear-gradient(to bottom,'+stops.join(',')+')';
+  const entrance=clamp01((progress-.72)/.28);
+  businessPage.style.setProperty('--project-entrance',String(entrance*entrance*(3-2*entrance)));
+}
+function queueBusinessBands(){
+  if(bandFrame===null)bandFrame=requestAnimationFrame(paintBusinessBands);
+}
+window.addEventListener('scroll',queueBusinessBands,{passive:true});
+window.addEventListener('resize',queueBusinessBands,{passive:true});
+reducedMotion.addEventListener('change',queueBusinessBands);
+paintBusinessBands();
