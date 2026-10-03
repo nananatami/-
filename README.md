@@ -2,6 +2,10 @@
 
 网站地址：https://nananatami.github.io/-/
 
+组件设计稿：https://www.figma.com/design/ZDknmwEdfzRni9LjSGbsIQ?node-id=2-35
+
+顶部仅保留动画开关，使用暂停／播放图标；MENU 已移除。桌面鼠标默认显示小圆点，悬停可点击区域变为圆环，并按功能显示箭头或展开／收起符号，深浅背景使用不同颜色，不使用反色混合。手机保留原生触控。业务组件统一使用圆形展开按钮和细描边技术标签。
+
 GitHub Pages 从 `main` 分支根目录发布。修改根目录的 `index.html`、`style.css`、`main.js` 或 `assets` 后，提交并推送到 `main` 即会触发更新；无需修改 `dist` 副本。`.nojekyll` 用于直接发布静态文件。
 
 本地预览：运行 `node server.cjs`，打开 http://127.0.0.1:5173 。
