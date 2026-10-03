@@ -2,9 +2,8 @@ const hero = document.querySelector('.hero');
 const grid = document.querySelector('#tiles');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const mobile = window.matchMedia('(max-width:700px)');
-const motion = document.querySelector('#motion');
 const turn = document.querySelector('#turn');
-let tiles = [], paused = reducedMotion.matches, back = false, busy = false, flipTimer;
+let tiles = [], back = false, busy = false, flipTimer;
 
 function syncSlices() {
   const rect = grid.getBoundingClientRect();
@@ -29,7 +28,7 @@ function buildGrid() {
       tile.append(face);
     }
     tile.addEventListener('pointerenter', e => {
-      if(e.pointerType === 'mouse' && !back && !busy && !paused && !tile.classList.contains('peek')) {
+      if(e.pointerType === 'mouse' && !back && !busy && !reducedMotion.matches && !tile.classList.contains('peek')) {
         tile.classList.add('peek');
         setTimeout(() => tile.classList.remove('peek'), 1200);
       }
@@ -42,7 +41,7 @@ function buildGrid() {
 function showSide(next) {
   if(busy || next === back) return;
   back = next;
-  busy = !(paused || reducedMotion.matches);
+  busy = !reducedMotion.matches;
   tiles.forEach(tile => tile.classList.remove('peek'));
   hero.classList.toggle('is-back',back);
   document.querySelector('#about').setAttribute('aria-hidden', String(!back));
@@ -55,15 +54,7 @@ function showSide(next) {
   clearTimeout(flipTimer);
   flipTimer = setTimeout(() => {busy=false;}, busy ? 1300 : 0);
 }
-function updateMotion() {
-  document.body.classList.toggle('paused',paused);
-  motion.querySelector('.motion-label').textContent = paused ? '开启动态' : '暂停动态';
-  motion.setAttribute('aria-label',paused ? '开启动画' : '暂停动画');
-  motion.setAttribute('aria-pressed',String(paused));
-}
 turn.addEventListener('click',() => {window.scrollTo({top:0,behavior:'instant'}); showSide(!back);});
-motion.addEventListener('click',() => {paused=!paused; updateMotion();});
-reducedMotion.addEventListener('change',e => {paused=e.matches; updateMotion();});
 mobile.addEventListener('change',buildGrid);
 new ResizeObserver(syncSlices).observe(grid);
 window.addEventListener('wheel',e => {
@@ -113,20 +104,20 @@ document.querySelectorAll('a[href="#about"]').forEach(a => a.addEventListener('c
 document.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click',e => {
   e.preventDefault(); window.scrollTo({top:0,behavior:'instant'}); showSide(false);
 }));
-function openSection(hash){
+function openSection(hash, initial=false){
   const target=document.querySelector(hash);
   if(!target) return;
   if(!back) showSide(true);
-  window.scrollTo({top:target.offsetTop,behavior:'instant'});
+  window.scrollTo({top:target.offsetTop,behavior:initial||reducedMotion.matches?'instant':'smooth'});
   history.replaceState(null,'',hash);
 }
 document.querySelectorAll('a[href="#team"],a[href="#projects"],a[href="#capabilities"]').forEach(a=>a.addEventListener('click',e=>{
   e.preventDefault();openSection(a.getAttribute('href'));
 }));
 history.scrollRestoration='manual';
-buildGrid(); updateMotion();
+buildGrid();
 window.addEventListener('load',() => {
-  if(['#team','#projects','#capabilities'].includes(location.hash)) openSection(location.hash);
+  if(['#team','#projects','#capabilities'].includes(location.hash)) openSection(location.hash,true);
   else window.scrollTo({top:0,behavior:'instant'});
 });
 
@@ -175,12 +166,12 @@ function hideCursor(){if(cursorFrame!==null){cancelAnimationFrame(cursorFrame);c
 function updateCursorTarget(target){
   const control=target instanceof Element?target.closest('button,a,[role="button"]'):null;
   cursor.classList.toggle('cursor-interactive',Boolean(control));
-  const darkSurface=target instanceof Element && target.closest('.hero,.header,.project-visual,.project-row.is-open,.project-row:hover');
+  const darkSurface=target instanceof Element && target.closest('.hero,.project-visual,.project-row.is-open,.project-row:hover');
   cursor.classList.toggle('cursor-on-dark',Boolean(darkSurface));
   cursorSymbol.textContent='';
 }
 function drawCursor(time){
-  const staticMotion=paused||reducedMotion.matches;
+  const staticMotion=reducedMotion.matches;
   const dt=lastCursorTime?Math.min(time-lastCursorTime,40):16;
   const blend=staticMotion?1:1-Math.exp(-dt/65);
   trailX+=(cursorX-trailX)*blend;trailY+=(cursorY-trailY)*blend;
@@ -212,3 +203,18 @@ document.addEventListener('keydown',e=>{if(e.key==='Tab')hideCursor();});
 finePointer.addEventListener('change',()=>{if(!finePointer.matches)hideCursor();});
 
 window.addEventListener('scroll',()=>{if(document.body.classList.contains('has-custom-cursor'))updateCursorTarget(document.elementFromPoint(cursorX,cursorY));},{passive:true});
+
+// Reveal the business title as the blue introduction flows into the list.
+const projectsHeading=document.querySelector('.projects-heading');
+if('IntersectionObserver' in window && !reducedMotion.matches){
+  const headingObserver=new IntersectionObserver(entries=>{
+    for(const entry of entries){
+      if(entry.isIntersecting){
+        entry.target.classList.remove('awaiting-reveal');
+        headingObserver.unobserve(entry.target);
+      }
+    }
+  },{threshold:.35});
+  projectsHeading.classList.add('awaiting-reveal');
+  headingObserver.observe(projectsHeading);
+}
