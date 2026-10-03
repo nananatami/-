@@ -38,10 +38,10 @@ function buildGrid() {
   });
   syncSlices();
 }
-function showSide(next) {
+function showSide(next, immediate=false) {
   if(busy || next === back) return;
   back = next;
-  busy = !reducedMotion.matches;
+  busy = !immediate && !reducedMotion.matches;
   tiles.forEach(tile => tile.classList.remove('peek'));
   hero.classList.toggle('is-back',back);
   document.querySelector('#about').setAttribute('aria-hidden', String(!back));
@@ -107,8 +107,8 @@ document.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('cli
 function openSection(hash, initial=false){
   const target=document.querySelector(hash);
   if(!target) return;
-  if(!back) showSide(true);
-  window.scrollTo({top:target.offsetTop,behavior:initial||reducedMotion.matches?'instant':'smooth'});
+  if(!back) showSide(true,initial);
+  window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY,behavior:initial||reducedMotion.matches?'instant':'smooth'});
   history.replaceState(null,'',hash);
 }
 document.querySelectorAll('a[href="#team"],a[href="#projects"],a[href="#capabilities"]').forEach(a=>a.addEventListener('click',e=>{
@@ -203,18 +203,3 @@ document.addEventListener('keydown',e=>{if(e.key==='Tab')hideCursor();});
 finePointer.addEventListener('change',()=>{if(!finePointer.matches)hideCursor();});
 
 window.addEventListener('scroll',()=>{if(document.body.classList.contains('has-custom-cursor'))updateCursorTarget(document.elementFromPoint(cursorX,cursorY));},{passive:true});
-
-// Reveal the business title as the blue introduction flows into the list.
-const projectsHeading=document.querySelector('.projects-heading');
-if('IntersectionObserver' in window && !reducedMotion.matches){
-  const headingObserver=new IntersectionObserver(entries=>{
-    for(const entry of entries){
-      if(entry.isIntersecting){
-        entry.target.classList.remove('awaiting-reveal');
-        headingObserver.unobserve(entry.target);
-      }
-    }
-  },{threshold:.35});
-  projectsHeading.classList.add('awaiting-reveal');
-  headingObserver.observe(projectsHeading);
-}
