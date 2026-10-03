@@ -3,6 +3,11 @@ const grid = document.querySelector('#tiles');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const mobile = window.matchMedia('(max-width:700px)');
 const turn = document.querySelector('#turn');
+const flatBack=document.createElement('div');
+flatBack.className='flat-back';
+flatBack.setAttribute('aria-hidden','true');
+flatBack.append(document.querySelector('#back-scene').content.cloneNode(true));
+hero.append(flatBack);
 let tiles = [], back = false, busy = false, flipTimer;
 
 function syncSlices() {
@@ -40,6 +45,7 @@ function buildGrid() {
 }
 function showSide(next, immediate=false) {
   if(busy || next === back) return;
+  hero.classList.remove('is-static-back');
   back = next;
   busy = !immediate && !reducedMotion.matches;
   tiles.forEach(tile => tile.classList.remove('peek'));
@@ -52,18 +58,28 @@ function showSide(next, immediate=false) {
   document.querySelector('.scroll').href = back ? '#team' : '#about';
   document.querySelector('.scroll').setAttribute('aria-label',back ? '查看团队与项目' : '了解一梦');
   clearTimeout(flipTimer);
-  flipTimer = setTimeout(() => {busy=false;}, busy ? 1300 : 0);
+  flipTimer = setTimeout(() => {busy=false;hero.classList.toggle('is-static-back',back);}, busy ? 1300 : 0);
 }
 turn.addEventListener('click',() => {window.scrollTo({top:0,behavior:'instant'}); showSide(!back);});
 mobile.addEventListener('change',buildGrid);
 new ResizeObserver(syncSlices).observe(grid);
-window.addEventListener('wheel',e => {
+function handleHeroWheel(e){
   if(e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
   if(window.scrollY <= 4 && (busy || (!back && e.deltaY>0) || (back && e.deltaY<0))) {
     e.preventDefault();
     if(!busy) showSide(e.deltaY>0);
   }
-}, {passive:false});
+}
+let wheelTrapActive=false;
+function syncHeroWheelTrap(){
+  const active=window.scrollY<=4;
+  if(active===wheelTrapActive)return;
+  wheelTrapActive=active;
+  if(active)window.addEventListener('wheel',handleHeroWheel,{passive:false});
+  else window.removeEventListener('wheel',handleHeroWheel);
+}
+window.addEventListener('scroll',syncHeroWheelTrap,{passive:true});
+syncHeroWheelTrap();
 let startTouch = null;
 let touchConsumed = false;
 hero.addEventListener('touchstart',e => {startTouch=e.touches[0].clientY;touchConsumed=false;}, {passive:true});
@@ -124,7 +140,13 @@ window.addEventListener('load',() => {
 // Full-width project rows, with one detail region expanded at a time.
 const projectRows=[...document.querySelectorAll('.project-row')];
 const projectButtons=projectRows.map(row=>row.querySelector('.project-toggle'));
-let hoverTimer;
+let hoverTimer,scrollIdleTimer,projectScrolling=false;
+window.addEventListener('scroll',()=>{
+  projectScrolling=true;
+  clearTimeout(hoverTimer);
+  clearTimeout(scrollIdleTimer);
+  scrollIdleTimer=setTimeout(()=>{projectScrolling=false;},180);
+},{passive:true});
 function openProject(selected){
   projectRows.forEach((row,index)=>{
     const open=index===selected;
@@ -142,7 +164,7 @@ projectButtons.forEach((button,index)=>{
     openProject(button.getAttribute('aria-expanded')==='true'?-1:index);
   });
   button.addEventListener('pointerenter',e=>{
-    if(e.pointerType!=='mouse' || !window.matchMedia('(hover:hover)').matches) return;
+    if(e.pointerType!=='mouse' || projectScrolling || !window.matchMedia('(hover:hover)').matches) return;
     clearTimeout(hoverTimer);
     hoverTimer=setTimeout(()=>openProject(index),180);
   });
@@ -204,31 +226,43 @@ finePointer.addEventListener('change',()=>{if(!finePointer.matches)hideCursor();
 
 window.addEventListener('scroll',()=>{if(document.body.classList.contains('has-custom-cursor'))updateCursorTarget(document.elementFromPoint(cursorX,cursorY));},{passive:true});
 
-// Horizontal bands open with scroll, then join into one continuous business page.
+// Four small compositor layers close the blue gaps without repainting a page mask.
 const businessPage=document.querySelector('#team');
 const clamp01=value=>Math.max(0,Math.min(1,value));
-let bandFrame=null;
+const bandLayer=document.createElement('div');
+bandLayer.className='business-band-gaps';
+bandLayer.setAttribute('aria-hidden','true');
+const bandGaps=Array.from({length:4},()=>{
+  const gap=document.createElement('div');
+  gap.className='business-band-gap';
+  bandLayer.append(gap);
+  return gap;
+});
+businessPage.prepend(bandLayer);
+let bandFrame=null,bandViewport=0,bandTop=0,lastBandProgress=-1;
+function measureBusinessBands(){
+  bandViewport=document.documentElement.clientHeight;
+  bandTop=businessPage.getBoundingClientRect().top+window.scrollY;
+  const height=bandViewport*.11;
+  bandGaps.forEach((gap,index)=>{
+    gap.style.top=index*height+'px';
+    gap.style.height=height+'px';
+  });
+  lastBandProgress=-1;
+  queueBusinessBands();
+}
 function paintBusinessBands(){
   bandFrame=null;
-  const viewport=document.documentElement.clientHeight;
-  const top=businessPage.getBoundingClientRect().top;
-  const progress=clamp01((viewport-top)/(viewport*.55));
-  if(reducedMotion.matches || progress>=1){
-    businessPage.style.maskImage='none';
-    businessPage.style.setProperty('--project-entrance','1');
-    return;
-  }
-  const bandHeight=viewport*.11;
-  const stops=['transparent 0px'];
+  const progress=reducedMotion.matches?1:clamp01((window.scrollY+bandViewport-bandTop)/(bandViewport*.55));
+  if(progress===lastBandProgress)return;
+  lastBandProgress=progress;
+  bandLayer.hidden=progress>=1;
   for(let i=0;i<4;i++){
     const local=clamp01(progress*1.35-(3-i)*.08);
     const eased=local*local*(3-2*local);
-    const start=i*bandHeight;
-    const edge=start+Math.max(0,bandHeight*(1-eased)-2);
-    stops.push('transparent '+start+'px','transparent '+edge+'px','#000 '+edge+'px','#000 '+((i+1)*bandHeight)+'px');
+    const scale=Math.max(0,1-eased-2/(bandViewport*.11));
+    bandGaps[i].style.transform='scaleY('+scale+')';
   }
-  stops.push('#000 100%');
-  businessPage.style.maskImage='linear-gradient(to bottom,'+stops.join(',')+')';
   const entrance=clamp01((progress-.72)/.28);
   businessPage.style.setProperty('--project-entrance',String(entrance*entrance*(3-2*entrance)));
 }
@@ -236,6 +270,6 @@ function queueBusinessBands(){
   if(bandFrame===null)bandFrame=requestAnimationFrame(paintBusinessBands);
 }
 window.addEventListener('scroll',queueBusinessBands,{passive:true});
-window.addEventListener('resize',queueBusinessBands,{passive:true});
-reducedMotion.addEventListener('change',queueBusinessBands);
-paintBusinessBands();
+window.addEventListener('resize',measureBusinessBands,{passive:true});
+reducedMotion.addEventListener('change',()=>{lastBandProgress=-1;queueBusinessBands();});
+measureBusinessBands();
