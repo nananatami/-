@@ -140,18 +140,32 @@ window.addEventListener('load',() => {
 // Full-width project rows, with one detail region expanded at a time.
 const projectRows=[...document.querySelectorAll('.project-row')];
 const projectButtons=projectRows.map(row=>row.querySelector('.project-toggle'));
-// Keep the real button label on the front; the back is a decorative duplicate.
+// Flip each title glyph in sequence while keeping one accessible button label.
 projectButtons.forEach(button=>{
-  const flipper=document.createElement('span');
-  flipper.className='project-heading-flipper';
-  const front=document.createElement('span');
-  front.className='project-heading-face project-heading-front';
-  front.append(...button.childNodes);
-  const rear=front.cloneNode(true);
-  rear.className='project-heading-face project-heading-back';
-  rear.setAttribute('aria-hidden','true');
-  flipper.append(front,rear);
-  button.append(flipper);
+  const name=button.querySelector('.project-name');
+  const title=name.textContent;
+  button.setAttribute('aria-label',[
+    button.querySelector('.project-number').textContent,
+    title,
+    button.querySelector('.project-one-line').textContent
+  ].join(' '));
+  name.replaceChildren(...Array.from(title,(glyph,index)=>{
+    const letter=document.createElement('span');
+    letter.className='project-letter';
+    letter.style.setProperty('--letter',index);
+    const front=document.createElement('span');
+    front.className='project-letter-front';
+    front.textContent=glyph;
+    const rear=front.cloneNode(true);
+    rear.className='project-letter-back';
+    rear.setAttribute('aria-hidden','true');
+    letter.append(front,rear);
+    return letter;
+  }));
+  const heading=document.createElement('span');
+  heading.className='project-heading-flipper project-heading-face';
+  heading.append(...button.childNodes);
+  button.append(heading);
 });
 let scrollIdleTimer,projectScrolling=false;
 window.addEventListener('scroll',()=>{
