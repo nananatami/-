@@ -44,16 +44,16 @@
 .hero.is-static-back .flat-back{display:block}
 .hero.is-static-back .tiles{visibility:hidden}
 
-/* Aura Midnight Sapphire: original layer geometry; only the blue palette is adapted. */
+/* Continuous section background; Aura layers add atmosphere without separate panel edges. */
 body{background-color:#faf8f2}
-.project-gradient{background:transparent;isolation:auto;padding-top:0}
-.aura-bg{position:relative;overflow:hidden;min-height:140svh;background:transparent}
-.aura-layer{position:absolute;inset:0;mix-blend-mode:multiply;filter:blur(130px);pointer-events:none;transform:translateZ(0);will-change:transform}
-.aura-layer-1{background:linear-gradient(rgba(0,0,0,0) 0%,rgba(0,47,167,.12) 28%,rgb(255,255,255) 18%,rgb(32,62,145) 68%,rgb(12,27,72) 100%)}
-.aura-layer-2{background:linear-gradient(rgba(0,0,0,0) 0%,rgba(0,47,167,.22) 34%,rgb(255,255,255) 66%,rgb(32,62,145) 82%,rgb(12,27,72) 100%)}
+.project-gradient{--aura-height:140svh;background:linear-gradient(180deg,#002fa7 0,#002fa7 7svh,#234cc0 26svh,#7c9bdf 53svh,#d0dcef 80svh,#eef0f2 108svh,#faf8f2 140svh);isolation:isolate;padding-top:55svh;overflow:hidden}
+.aura-bg{position:absolute;left:0;right:0;top:0;height:var(--aura-height);overflow:hidden;pointer-events:none;background:transparent;mask-image:linear-gradient(transparent 5%,#000 35%,#000 65%,transparent 100%)}
+.aura-layer{position:absolute;inset:0 -130px;mix-blend-mode:multiply;filter:blur(130px);pointer-events:none;transform:translateZ(0)}
+.aura-layer-1{background:linear-gradient(0deg,rgba(0,0,0,0) 0%,rgba(0,47,167,.12) 28%,rgb(255,255,255) 18%,rgb(100,136,223) 68%,rgb(41,76,174) 100%)}
+.aura-layer-2{background:linear-gradient(0deg,rgba(0,0,0,0) 0%,rgba(0,47,167,.22) 34%,rgb(255,255,255) 66%,rgb(118,151,231) 82%,rgb(56,89,190) 100%)}
 .projects-accordion{position:relative;z-index:1;background:transparent}
-.projects-heading{position:absolute;left:0;right:0;top:24%;z-index:1;color:#121d32;padding-bottom:0}
-.projects-heading p{color:#53627a}
-.project-one-line{color:#263b59}
+.projects-heading{position:relative;color:#121d32;padding-bottom:70px}
+.projects-heading p{color:#121d32}
+.project-one-line{color:#354962}
 footer{background:#faf8f2}
-@media(max-width:700px){.project-gradient{padding-top:0}.aura-layer{filter:blur(90px)}.projects-heading{padding-bottom:0}}
+@media(max-width:700px){.project-gradient{padding-top:52svh}.aura-layer{inset:0 -90px;filter:blur(90px)}.projects-heading{padding-bottom:45px}}
