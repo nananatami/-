@@ -10,14 +10,24 @@ flatBack.append(document.querySelector('#back-scene').content.cloneNode(true));
 hero.append(flatBack);
 let tiles = [], back = false, busy = false, flipTimer;
 
-function syncSlices() {
-  const rect = grid.getBoundingClientRect();
-  grid.style.setProperty('--stage-width', `${rect.width}px`);
-  grid.style.setProperty('--stage-height', `${rect.height}px`);
-  tiles.forEach(tile => {
-    tile.style.setProperty('--slice-x', `${tile.offsetLeft}px`);
-    tile.style.setProperty('--slice-y', `${tile.offsetTop}px`);
+let stageWidth=0,stageHeight=0;
+function syncSlices(force=false) {
+  const rect=grid.getBoundingClientRect();
+  if(!force && rect.width===stageWidth && rect.height===stageHeight)return;
+  // Read every tile before writing styles to avoid repeated forced layouts.
+  const positions=tiles.map(tile=>({x:tile.offsetLeft,y:tile.offsetTop}));
+  stageWidth=rect.width;stageHeight=rect.height;
+  grid.style.setProperty('--stage-width',`${stageWidth}px`);
+  grid.style.setProperty('--stage-height',`${stageHeight}px`);
+  tiles.forEach((tile,index)=>{
+    tile.style.setProperty('--slice-x',`${positions[index].x}px`);
+    tile.style.setProperty('--slice-y',`${positions[index].y}px`);
   });
+}
+function peekTile(tile){
+  if(back || busy || reducedMotion.matches || tile.classList.contains('peek'))return;
+  tile.classList.add('peek');
+  setTimeout(()=>tile.classList.remove('peek'),780);
 }
 function buildGrid() {
   grid.replaceChildren();
@@ -25,23 +35,34 @@ function buildGrid() {
   tiles = Array.from({length:cols*rows}, (_,i) => {
     const tile = document.createElement('div');
     tile.className = 'tile';
-    tile.style.setProperty('--delay', `${((i % cols) + Math.floor(i / cols)) * 28}ms`);
+    tile.style.setProperty('--delay', `calc(var(--flip-step) * ${(i % cols)+Math.floor(i/cols)})`);
     for (const side of ['front','back']) {
       const face = document.createElement('div');
       face.className = `face ${side}`;
       face.append(document.querySelector(`#${side}-scene`).content.cloneNode(true));
       tile.append(face);
     }
-    tile.addEventListener('pointerenter', e => {
-      if(e.pointerType === 'mouse' && !back && !busy && !reducedMotion.matches && !tile.classList.contains('peek')) {
-        tile.classList.add('peek');
-        setTimeout(() => tile.classList.remove('peek'), 1200);
-      }
+    tile.addEventListener('pointerenter',e=>{
+      if(e.pointerType==='mouse')peekTile(tile);
     });
+    let tapStart=null;
+    tile.addEventListener('pointerdown',e=>{
+      if(e.pointerType!=='mouse' && e.isPrimary!==false){
+        tapStart={id:e.pointerId,x:e.clientX,y:e.clientY};
+      }
+    },{passive:true});
+    tile.addEventListener('pointerup',e=>{
+      const start=tapStart;tapStart=null;
+      if(start && e.pointerId===start.id && Math.hypot(e.clientX-start.x,e.clientY-start.y)<=10){
+        peekTile(tile);
+      }
+    },{passive:true});
+    tile.addEventListener('pointercancel',()=>{tapStart=null;},{passive:true});
+    tile.addEventListener('animationend',()=>tile.classList.remove('peek'));
     grid.append(tile);
     return tile;
   });
-  syncSlices();
+  syncSlices(true);
 }
 function showSide(next, immediate=false) {
   if(busy || next === back) return;
@@ -58,11 +79,25 @@ function showSide(next, immediate=false) {
   document.querySelector('.scroll').href = back ? '#team' : '#about';
   document.querySelector('.scroll').setAttribute('aria-label',back ? '查看团队与项目' : '了解一梦');
   clearTimeout(flipTimer);
-  flipTimer = setTimeout(() => {busy=false;hero.classList.toggle('is-static-back',back);}, busy ? 1300 : 0);
+  if(!busy){hero.classList.toggle('is-static-back',back);return;}
+  const timing=getComputedStyle(tiles[tiles.length-1]);
+  const duration=parseFloat(timing.transitionDuration)*1000;
+  const delay=parseFloat(timing.transitionDelay)*1000;
+  // The transition event normally finishes the flip; this covers interruption/resizing.
+  flipTimer=setTimeout(finishFlip,duration+delay+50);
 }
+function finishFlip(){
+  if(!busy)return;
+  clearTimeout(flipTimer);
+  busy=false;
+  hero.classList.toggle('is-static-back',back);
+}
+grid.addEventListener('transitionend',e=>{
+  if(e.target===tiles[tiles.length-1] && e.propertyName==='transform')finishFlip();
+});
 turn.addEventListener('click',() => {window.scrollTo({top:0,behavior:'instant'}); showSide(!back);});
 mobile.addEventListener('change',buildGrid);
-new ResizeObserver(syncSlices).observe(grid);
+new ResizeObserver(()=>syncSlices()).observe(grid);
 function handleHeroWheel(e){
   if(e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
   if(window.scrollY <= 4 && (busy || (!back && e.deltaY>0) || (back && e.deltaY<0))) {
