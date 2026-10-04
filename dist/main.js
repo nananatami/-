@@ -140,10 +140,23 @@ window.addEventListener('load',() => {
 // Full-width project rows, with one detail region expanded at a time.
 const projectRows=[...document.querySelectorAll('.project-row')];
 const projectButtons=projectRows.map(row=>row.querySelector('.project-toggle'));
-let hoverTimer,scrollIdleTimer,projectScrolling=false;
+// Keep the real button label on the front; the back is a decorative duplicate.
+projectButtons.forEach(button=>{
+  const flipper=document.createElement('span');
+  flipper.className='project-heading-flipper';
+  const front=document.createElement('span');
+  front.className='project-heading-face project-heading-front';
+  front.append(...button.childNodes);
+  const rear=front.cloneNode(true);
+  rear.className='project-heading-face project-heading-back';
+  rear.setAttribute('aria-hidden','true');
+  flipper.append(front,rear);
+  button.append(flipper);
+});
+let scrollIdleTimer,projectScrolling=false;
 window.addEventListener('scroll',()=>{
+  if(!projectScrolling)projectRows.forEach(row=>row.classList.remove('is-highlighted'));
   projectScrolling=true;
-  clearTimeout(hoverTimer);
   clearTimeout(scrollIdleTimer);
   scrollIdleTimer=setTimeout(()=>{projectScrolling=false;},180);
 },{passive:true});
@@ -160,15 +173,13 @@ function openProject(selected){
 }
 projectButtons.forEach((button,index)=>{
   button.addEventListener('click',()=>{
-    clearTimeout(hoverTimer);
     openProject(button.getAttribute('aria-expanded')==='true'?-1:index);
   });
   button.addEventListener('pointerenter',e=>{
     if(e.pointerType!=='mouse' || projectScrolling || !window.matchMedia('(hover:hover)').matches) return;
-    clearTimeout(hoverTimer);
-    hoverTimer=setTimeout(()=>openProject(index),180);
+    button.closest('.project-row').classList.add('is-highlighted');
   });
-  button.addEventListener('pointerleave',()=>clearTimeout(hoverTimer));
+  button.addEventListener('pointerleave',()=>button.closest('.project-row').classList.remove('is-highlighted'));
   button.addEventListener('keydown',e=>{
     let next=index;
     if(e.key==='ArrowDown') next=(index+1)%projectButtons.length;
@@ -188,7 +199,7 @@ function hideCursor(){if(cursorFrame!==null){cancelAnimationFrame(cursorFrame);c
 function updateCursorTarget(target){
   const control=target instanceof Element?target.closest('button,a,[role="button"]'):null;
   cursor.classList.toggle('cursor-interactive',Boolean(control));
-  const darkSurface=target instanceof Element && target.closest('.hero,.project-visual,.project-row.is-open,.project-row:hover');
+  const darkSurface=target instanceof Element && target.closest('.hero,.project-visual,.project-row.is-open,.project-row.is-highlighted');
   cursor.classList.toggle('cursor-on-dark',Boolean(darkSurface));
   cursorSymbol.textContent='';
 }
