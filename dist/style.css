@@ -44,14 +44,15 @@
 .hero.is-static-back .flat-back{display:block}
 .hero.is-static-back .tiles{visibility:hidden}
 
-/* Adapted from Aura Midnight Sapphire (MIT): two stationary multiply layers. */
-.project-gradient{background:#edf3fa;isolation:isolate;padding-top:120px}
-.aura-bg{position:absolute;left:0;right:0;top:0;height:360px;overflow:hidden;pointer-events:none;background:transparent}
-.aura-layer{position:absolute;inset:-130px -50px;mix-blend-mode:multiply;filter:blur(130px);pointer-events:none;transform:translateZ(0)}
-.aura-layer-1{background:linear-gradient(0deg,rgba(0,47,167,0) 0%,rgba(90,145,245,.12) 28%,#fff 28%,#3869bf 68%,#002fa7 100%)}
-.aura-layer-2{background:linear-gradient(0deg,rgba(0,47,167,0) 0%,rgba(90,145,245,.22) 34%,#fff 66%,#6d9bdd 82%,#002fa7 100%)}
-.aura-bg:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#002fa7 0px,rgba(0,47,167,0) 90px,rgba(237,243,250,0) 230px,#edf3fa 360px)}
+/* Aura Midnight Sapphire: viewport-scale layers preserve the natural blur edges. */
+.project-gradient{background:#edf3fa;isolation:isolate;padding-top:110px}
+.aura-bg{position:absolute;left:0;right:0;top:0;height:max(100svh,640px);overflow:hidden;pointer-events:none;background:transparent}
+.aura-layer{position:absolute;inset:0;mix-blend-mode:multiply;filter:blur(130px);pointer-events:none;transform:translateZ(0)}
+.aura-layer-1{background:linear-gradient(0deg,rgba(0,0,0,0) 0%,rgba(0,47,167,.12) 28%,#fff 18%,#163487 68%,#08183c 100%)}
+.aura-layer-2{background:linear-gradient(0deg,rgba(0,0,0,0) 0%,rgba(0,47,167,.22) 34%,#fff 66%,#163487 82%,#08183c 100%)}
+.aura-bg:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#002fa7 0px,rgba(0,47,167,0) 100px,rgba(237,243,250,0) 130px,#edf3fa 340px)}
 .projects-accordion{position:relative;z-index:1}
-.projects-heading{color:#f4f3ee}
-.projects-heading p{color:#16335f}
-@media(max-width:700px){.project-gradient{padding-top:92px}.aura-bg{height:300px}.aura-layer{inset:-90px -32px;filter:blur(90px)}.aura-bg:after{background:linear-gradient(180deg,#002fa7 0px,rgba(0,47,167,0) 70px,rgba(237,243,250,0) 190px,#edf3fa 300px)}}
+.projects-heading{color:#f4f3ee;padding-bottom:55px}
+.projects-heading p{color:#e0e8ff}
+.project-one-line{color:#263b59}
+@media(max-width:700px){.project-gradient{padding-top:100px}.aura-bg{height:max(100svh,700px)}.aura-layer{filter:blur(90px)}.projects-heading{padding-bottom:45px}}
