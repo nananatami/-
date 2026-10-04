@@ -46,7 +46,7 @@
 
 /* Continuous section background; Aura layers add atmosphere without separate panel edges. */
 body{background-color:#faf8f2}
-.project-gradient{--aura-height:140svh;background:linear-gradient(180deg,#002fa7 0,#002fa7 7svh,#234cc0 26svh,#7c9bdf 53svh,#d0dcef 80svh,#eef0f2 108svh,#faf8f2 140svh);isolation:isolate;padding-top:55svh;overflow:hidden}
+.project-gradient{--aura-height:140svh;background:linear-gradient(180deg,#002fa7 0,#002fa7 7svh,#234cc0 26svh,#7c9bdf 53svh,#d0dcef 80svh,#eef0f2 108svh,#faf8f2 140svh);isolation:isolate;padding-top:47svh;overflow:hidden}
 .aura-bg{position:absolute;left:0;right:0;top:0;height:var(--aura-height);overflow:hidden;pointer-events:none;background:transparent;mask-image:linear-gradient(transparent 5%,#000 35%,#000 65%,transparent 100%)}
 .aura-layer{position:absolute;inset:0 -130px;mix-blend-mode:multiply;filter:blur(130px);pointer-events:none;transform:translateZ(0)}
 .aura-layer-1{background:linear-gradient(0deg,rgba(0,0,0,0) 0%,rgba(0,47,167,.12) 28%,rgb(255,255,255) 18%,rgb(100,136,223) 68%,rgb(41,76,174) 100%)}
@@ -56,4 +56,4 @@ body{background-color:#faf8f2}
 .projects-heading p{color:#121d32}
 .project-one-line{color:#354962}
 footer{background:#faf8f2}
-@media(max-width:700px){.project-gradient{padding-top:52svh}.aura-layer{inset:0 -90px;filter:blur(90px)}.projects-heading{padding-bottom:45px}}
+@media(max-width:700px){.project-gradient{padding-top:44svh}.aura-layer{inset:0 -90px;filter:blur(90px)}.projects-heading{padding-bottom:45px}}
