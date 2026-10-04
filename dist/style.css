@@ -44,15 +44,16 @@
 .hero.is-static-back .flat-back{display:block}
 .hero.is-static-back .tiles{visibility:hidden}
 
-/* Aura Midnight Sapphire: viewport-scale layers preserve the natural blur edges. */
-.project-gradient{background:#edf3fa;isolation:isolate;padding-top:110px}
-.aura-bg{position:absolute;left:0;right:0;top:0;height:max(100svh,640px);overflow:hidden;pointer-events:none;background:transparent}
-.aura-layer{position:absolute;inset:0;mix-blend-mode:multiply;filter:blur(130px);pointer-events:none;transform:translateZ(0)}
-.aura-layer-1{background:linear-gradient(0deg,rgba(0,0,0,0) 0%,rgba(0,47,167,.12) 28%,#fff 18%,#163487 68%,#08183c 100%)}
-.aura-layer-2{background:linear-gradient(0deg,rgba(0,0,0,0) 0%,rgba(0,47,167,.22) 34%,#fff 66%,#163487 82%,#08183c 100%)}
-.aura-bg:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#002fa7 0px,rgba(0,47,167,0) 100px,rgba(237,243,250,0) 130px,#edf3fa 340px)}
-.projects-accordion{position:relative;z-index:1}
-.projects-heading{color:#f4f3ee;padding-bottom:55px}
-.projects-heading p{color:#e0e8ff}
+/* Aura Midnight Sapphire: original layer geometry; only the blue palette is adapted. */
+body{background-color:#faf8f2}
+.project-gradient{background:transparent;isolation:auto;padding-top:0}
+.aura-bg{position:relative;overflow:hidden;min-height:140svh;background:transparent}
+.aura-layer{position:absolute;inset:0;mix-blend-mode:multiply;filter:blur(130px);pointer-events:none;transform:translateZ(0);will-change:transform}
+.aura-layer-1{background:linear-gradient(rgba(0,0,0,0) 0%,rgba(0,47,167,.12) 28%,rgb(255,255,255) 18%,rgb(32,62,145) 68%,rgb(12,27,72) 100%)}
+.aura-layer-2{background:linear-gradient(rgba(0,0,0,0) 0%,rgba(0,47,167,.22) 34%,rgb(255,255,255) 66%,rgb(32,62,145) 82%,rgb(12,27,72) 100%)}
+.projects-accordion{position:relative;z-index:1;background:transparent}
+.projects-heading{position:absolute;left:0;right:0;top:24%;z-index:1;color:#121d32;padding-bottom:0}
+.projects-heading p{color:#53627a}
 .project-one-line{color:#263b59}
-@media(max-width:700px){.project-gradient{padding-top:100px}.aura-bg{height:max(100svh,700px)}.aura-layer{filter:blur(90px)}.projects-heading{padding-bottom:45px}}
+footer{background:#faf8f2}
+@media(max-width:700px){.project-gradient{padding-top:0}.aura-layer{filter:blur(90px)}.projects-heading{padding-bottom:0}}
