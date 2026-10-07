@@ -312,7 +312,7 @@ button {
 }
 
 .intro-copy {
-    font-size: clamp(17px, 1.45dvw, 23px);
+    font-size: clamp(12px, 1.45dvw, 22px);
     line-height: 1.8;
     text-align: left;
     max-width: 30em;
@@ -334,6 +334,10 @@ button {
     outline-color: transparent;
     outline-offset: 16px;
     transition: outline .3s, outline-offset .3s linear;
+
+    .hero.is-back & {
+        display: none;
+    }
 
     @media(max-width:700px) {
         width: 86px;
