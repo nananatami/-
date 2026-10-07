@@ -1,23 +1,45 @@
-# 一梦动态首屏样稿
+# 一梦工作室 · 官网样稿
 
-网站地址：https://nananatami.github.io/-/
+黑白 + 克莱因蓝（#002FA7）的单页静态站点，无构建、无依赖；全站分三部分：动态首屏、介绍区、业务手风琴。
 
-组件设计稿：https://www.figma.com/design/ZDknmwEdfzRni9LjSGbsIQ?node-id=2-35
+- 在线预览：https://nananatami.github.io/-/
+- 组件设计稿：https://www.figma.com/design/ZDknmwEdfzRni9LjSGbsIQ?node-id=2-35
 
-顶部不再显示 MENU 或动画开关。首页使用缓慢旋转的 SCROLL DOWN 文字环，点击先翻到介绍，再进入业务区。桌面鼠标使用随移动速度拉伸、停下后收回的细描边框，中心点精确跟随；深浅背景切换蓝色描边，不使用反色混合。系统减少动态偏好关闭旋转与鼠标缓动，手机保留原生触控。业务组件使用线形展开符号、带序号的技术标签与细线数据布局。
+## 页面
 
-GitHub Pages 从 `main` 分支根目录发布。修改根目录的 `index.html`、`style.css`、`main.js` 或 `assets` 后，提交并推送到 `main` 即会触发更新。`.nojekyll` 用于直接发布静态文件。
+- **动态首屏**：「一梦工作室」标题按网格切片（电脑 6×6、手机 3×6），随面板绕横轴翻转。滚动一步翻一屏：先整屏翻到蓝色介绍面，继续滚动进入业务区；在顶端向上滚动翻回正面。
+- **介绍区**：首屏翻面后的克莱因蓝面板，DESIGN × TECHNOLOGY 标题与团队介绍。
+- **业务区**：PROJECTS 手风琴；七项业务，每行默认收起，悬停或点击展开一项，详情含介绍与流程示意。
+- 系统减少动态偏好下保留翻面与开合功能，仅关闭过渡。
 
-本地预览：运行 `node server.cjs`，打开 http://127.0.0.1:51800 。
+## 本地预览
 
-黑白 + 克莱因蓝（#002FA7），原创 CSS 3D 翻转网格。自动逐列翻转、指针 / 触碰互动、减少动态偏好、移动端布局。首屏标题为“一梦工作室”，下方是 Design × technology 蓝色介绍区与三项业务能力。
+运行 `node server.cjs`，打开 http://127.0.0.1:51800 。
 
-字体：RRPL（首屏标题）、Chathura（英文介绍标题）、LXGW ZhiSong CL（中文正文）、USMCCyuanjiantecu（业务标题），全部自托管。Chathura 下载自 Google Fonts（版权说明在 chathura.css），中文两族为 ZeoSeven 全量分片（版权说明保留在 fonts.css），二者 unicode-range 按需加载，改文字无需处理。首屏标题字为单文件子集，改标题后由 `tools/make-hero-font.py` 重建（详见 tools/README）。
+## 发布
 
-首屏文字按网格切片，随面板绕横轴翻转。第一次向下滚动、向上滑动或按 PageDown 会原地翻到蓝色介绍背面，继续滚动才进入业务区。在顶端向上滚动可翻回正面。手机为三列六行，电脑为六列六行；减少动态模式下保留翻面功能并关闭过渡。
+GitHub Pages 从 `main` 分支根目录发布：推送到 `main` 即触发更新（`.nojekyll` 用于直接发布静态文件）。
 
-介绍与业务区使用 Aura Midnight Sapphire 的两层静态 multiply 渐变，颜色调整为克莱因蓝、冰蓝与近白色；背景位于独立页面底色之上，内容位于背景图层之上。取消条带、滚动遮罩和固定停留效果，页面使用自然滚动。桌面模糊 130px、手机 90px，以完整视口高度绘制，图层 inset:0 保留模糊产生的自然浅色边缘；正文区域通过连续浅色衔接保证可读性。点击下滑使用平滑滚动。七项业务包括：社区智能运营中台、前端开发与交互设计、多模型 AI 统一网关、AIGC 创作工作台、智能翻译工作流、运动与饮食陪伴助手、网络中继与反向代理工具。技术说明按团队提供的内容展示。各行默认收起；鼠标悬停或点击展开，一次只展开一个项目，再次点击可收起。键盘 Enter / Space 切换展开状态，方向键移动焦点。详情采用左侧介绍、右侧功能流程示意，手机上下排列。减少动态模式关闭展开过渡。社区成员规模保留最新确认的 62,000 人。
+## 文件
 
-性能处理：渐变两层保持静态，不在滚动时计算或改写渐变、遮罩与模糊。介绍翻转完成后显示单个平面并隐藏 3D 切片。滚轮拦截只在首页顶端启用，滚动时暂停业务条目的悬停展开，避免列表高度跳变。
+| 路径 | 说明 |
+|---|---|
+| `index.html` | 页面结构：hero 场景、项目区 |
+| `style.css` | 全部样式；翻页参数集中在 `.hero-stage` 块 |
+| `main.js` | 翻页控制、网格与交互、锚点导航 |
+| `server.cjs` | 本地预览服务器 |
+| `assets/fonts/` | 自托管字体与版权说明 |
+| `tools/` | 维护脚本（见 tools/README） |
+| `_archive/` | 移除文件的留档 |
+| `AGENTS.md` | 开发规则 |
 
-渐变来源：https://github.com/CristianOlivera1/Aura ，根据用户提供的 Midnight Sapphire 配置适配。MIT 版权与许可声明保存在 LICENSE-AURA.txt。
+## 字体
+
+全部自托管，unicode-range 按需加载：
+
+- 首屏标题 RRPL：单文件子集 `assets/fonts/rrpl-logo.woff2`；改标题后用 `tools/make-hero-font.py` 重建。
+- Chathura（Google Fonts）、LXGW ZhiSong CL、USMCCyuanjiantecu（ZeoSeven 分片）：改文字无需重建。
+
+## 许可
+
+- 字体版权说明保留在 `assets/fonts/` 对应 CSS 中。
