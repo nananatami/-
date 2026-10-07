@@ -2,7 +2,7 @@
 
 黑白 + 克莱因蓝（#002FA7）的单页静态站点，无构建、无依赖；全站分三部分：动态首屏、介绍区、业务手风琴。
 
-- 在线预览：https://nananatami.github.io/-/
+- 在线预览：https://nananatami.github.io/daydreamer/
 - 组件设计稿：https://www.figma.com/design/ZDknmwEdfzRni9LjSGbsIQ?node-id=2-35
 
 ## 页面
