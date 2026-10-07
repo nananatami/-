@@ -107,7 +107,7 @@ button {
 /* 翻页参数 */
 .hero-stage {
     /* 行程总长 */
-    --flip-travel: 50dvh;
+    --flip-travel: 50vh;
     /* 单格翻转占的比例 */
     --flip-span-ratio: 0.4;
     --flip-span: calc(var(--flip-travel) * var(--flip-span-ratio));
@@ -121,14 +121,14 @@ button {
     /* 滚动触发线 */
     --flip-trigger: 48px;
     position: relative;
-    height: calc(100dvh + var(--flip-travel));
+    height: calc(100vh + var(--flip-travel));
 
 }
 
 .hero {
     position: sticky;
     top: 0;
-    height: 100dvh;
+    height: 100vh;
     width: 100dvw;
     background: var(--black);
     overflow: clip;
@@ -237,7 +237,7 @@ button {
     left: calc(var(--col) * -100%);
     top: calc(var(--row) * -100%);
     width: 100dvw;
-    height: 100dvh;
+    height: 100vh;
     pointer-events: none
 }
 
@@ -252,7 +252,7 @@ button {
 .hero-copy {
     position: absolute;
     inset: 0;
-    bottom: 24dvh;
+    bottom: 24vh;
     display: flex;
     align-items: end;
     justify-content: center;
@@ -275,7 +275,7 @@ button {
     height: 100%;
     display: flex;
     justify-content: space-around;
-    padding-top: 20dvh;
+    padding-top: 20vh;
 
     @media (orientation: portrait) {
         flex-direction: column;
@@ -286,7 +286,7 @@ button {
 .intro-title {
     font-family: var(--latin-font);
     font-size: max(14dvw, 24vmin);
-    margin: 10dvh 0 0 10dvw;
+    margin: 10vh 0 0 10dvw;
 
     @media (orientation: portrait) {
         margin: 0 10dvw;
@@ -316,14 +316,16 @@ button {
     line-height: 1.8;
     text-align: left;
     max-width: 30em;
-    padding: 10dvh 10vmin 0;
+    padding: 10vh 10vmin 0;
     text-wrap: pretty;
     line-break: strict;
 }
 
 .scroll {
     position: absolute;
-    bottom: 22px;
+    /* 补上浏览器 UI 当前占去的高度（vh、dvh 之差），按钮始终贴可视底 */
+    bottom: calc(22px + env(safe-area-inset-bottom));
+    bottom: calc(22px + env(safe-area-inset-bottom) + (100vh - 100dvh));
     left: 50%;
     transform: translateX(-50%);
     width: 112px;
@@ -462,7 +464,7 @@ button {
 /* 标题：一整屏衬底 + 蓝帘退场 + 描边叠层收拢 */
 .projects-heading {
     position: relative;
-    height: 100dvh;
+    height: 100vh;
     display: grid;
     place-items: center;
 
@@ -501,7 +503,7 @@ button {
     }
 
     .projects-title {
-        transform: translateY(20dvh);
+        transform: translateY(20vh);
         animation: title-transform ease-out both;
         animation-timeline: --veil;
         animation-range: entry 60%;
@@ -510,7 +512,7 @@ button {
     .title-layer {
         color: transparent;
         -webkit-text-stroke: 2px var(--blue);
-        transform: translateY(calc(var(--rep) * 4dvh));
+        transform: translateY(calc(var(--rep) * 4vh));
         opacity: calc(1 - var(--rep) * 0.15);
         animation: title-gather ease-out both;
         animation-timeline: --veil;
@@ -525,7 +527,7 @@ button {
 
 @keyframes title-transform {
     to {
-        transform: translateY(-5dvh);
+        transform: translateY(-5vh);
     }
 }
 
@@ -692,7 +694,7 @@ button {
         }
     }
 
-    &:is( :hover, [open], :has(summary:focus-visible)) {
+    &:is([open], :has(summary:focus-visible)) {
         &::before {
             transform: scaleY(1);
         }
@@ -718,6 +720,37 @@ button {
 
         .project-plus {
             color: var(--随便吧);
+        }
+    }
+
+    @media (hover:hover) {
+        &:hover {
+            &::before {
+                transform: scaleY(1);
+            }
+
+            &::after {
+                transform: scaleY(1);
+                transition-delay: .08s;
+            }
+
+            .project-name {
+                color: var(--white);
+                animation: project-name-turn .8s cubic-bezier(.22, .7, .2, 1)
+            }
+
+            .project-number {
+                color: var(--blue);
+            }
+
+            .project-one-line {
+                color: var(--muted);
+                animation: project-subtitle-roll .8s ease-out;
+            }
+
+            .project-plus {
+                color: var(--随便吧);
+            }
         }
     }
 }
@@ -825,6 +858,8 @@ button {
     counter-reset: tech;
 
     span {
+        display: flex;
+        gap: 8px;
         font: 12px/1 Arial, sans-serif;
         color: var(--傻逼吧);
         align-items: center;
@@ -857,7 +892,18 @@ button {
             font-size: 10px;
             letter-spacing: 0.2em;
             color: var(--随便吧);
-            margin-right: 8px;
+        }
+
+        @media(orientation: portrait) {
+            flex-direction: column;
+        }
+    }
+
+    @media(max-width:700px) {
+        gap: 10px;
+
+        span:nth-child(n + 2) {
+            padding-left: 10px;
         }
     }
 }
@@ -939,6 +985,18 @@ button {
         font: 500 14px sans-serif;
         color: var(--随便吧);
     }
+
+    @media(max-width:700px) {
+        gap: 10px;
+
+        span {
+            font-size: 10px;
+        }
+
+        i {
+            font-size: 12px;
+        }
+    }
 }
 
 .visual-stats {
@@ -959,6 +1017,10 @@ button {
         color: var(--傻逼吧);
         margin-top: 8px
     }
+
+    @media(max-width:700px) {
+        gap: 32px;
+    }
 }
 
 .data-caption {
@@ -976,7 +1038,7 @@ button {
 footer {
     align-items: center;
     color: var(--去死吧);
-    padding: 32px 24px;
+    padding: 32px 24px calc(32px + env(safe-area-inset-bottom));
     display: flex;
     justify-content: space-between;
     font-size: 14px;

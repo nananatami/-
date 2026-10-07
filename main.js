@@ -4,6 +4,8 @@ if (location.hash) history.replaceState(null, '', location.pathname + location.s
 const hero = document.querySelector('.hero');
 const stage = document.querySelector('.hero-stage');
 const grid = document.querySelector('#tiles');
+// ?raw: bare-scroll diagnostic mode, no JS scroll control at all.
+const RAW = new URLSearchParams(location.search).has('raw');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const mobile = window.matchMedia('(max-width:700px)');
 let back = false;
@@ -82,6 +84,7 @@ function render() {
 }
 let rafId = 0, scrollDir = 0, dirMark = window.scrollY, settleTimer = 0;
 let busy = false, glidePos = null, glideToken = 0, navGuard = 0;
+let touching = false;
 const GLIDE_MS = cssNum('--flip-glide', 1100);
 function finishGlide() {
   busy = false;
@@ -91,7 +94,7 @@ function finishGlide() {
 }
 // Self-timed flip that locks the page while it runs: one trigger = one full screen.
 function glide(target) {
-  if (busy) return;
+  if (busy || RAW) return;
   debugNote(`glide→${target}`);
   const from = window.scrollY, delta = target - from;
   if (reducedMotion.matches || !GLIDE_MS || Math.abs(delta) < 2) {
@@ -115,6 +118,19 @@ function glide(target) {
   requestAnimationFrame(step);
 }
 window.addEventListener('wheel', e => { if (busy && !e.ctrlKey) e.preventDefault(); }, { passive: false });
+// Touch: the finger owns the scroll (incl. momentum); the flip resumes once it rests.
+let touchMode = false;
+function abortGlide() {
+  if (!busy) return;
+  glideToken++;
+  busy = false;
+  glidePos = null;
+  dirMark = window.scrollY;
+}
+window.addEventListener('touchstart', () => { touchMode = true; touching = true; abortGlide(); }, { passive: true });
+const endTouch = () => { touching = false; clearTimeout(settleTimer); settleTimer = setTimeout(settle, 120); };
+window.addEventListener('touchend', endTouch, { passive: true });
+window.addEventListener('touchcancel', endTouch, { passive: true });
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
   // Glide running: skip direction/trigger/settle below.
@@ -125,8 +141,8 @@ window.addEventListener('scroll', () => {
   // 12px hysteresis: sub-threshold jitter at the end of a flick keeps the previous direction.
   if (y - dirMark >= 12) { scrollDir = 1; dirMark = y; }
   else if (y - dirMark <= -12) { scrollDir = -1; dirMark = y; }
-  // Crossing the trigger line plays the whole flip: one scroll = one screen.
-  if (performance.now() > navGuard && scrollDir !== 0 && y > TRIGGER && y < flipDistance - TRIGGER) {
+  // Crossing the trigger line plays the whole flip: one scroll = one screen (wheel only; touch settles when it rests).
+  if (performance.now() > navGuard && scrollDir !== 0 && y > TRIGGER && y < flipDistance - TRIGGER && !touching && !touchMode) {
     glide(scrollDir > 0 ? flipDistance : 0);
   }
   if (!rafId) rafId = requestAnimationFrame(() => { rafId = 0; render(); });
@@ -136,7 +152,7 @@ window.addEventListener('scroll', () => {
 if ('onscrollend' in window) window.addEventListener('scrollend', settle);
 // A rest inside the flip zone settles across the trigger line.
 function settle() {
-  if (busy) return;
+  if (busy || touching) return;
   const y = window.scrollY;
   if (y <= 0 || y >= flipDistance) return;
   debugNote(`settle y=${Math.round(y)}`);
@@ -184,7 +200,7 @@ history.scrollRestoration = 'manual';
 buildGrid();
 render();
 window.addEventListener('load', () => {
-  window.scrollTo({ top: 0, behavior: 'instant' });
+  if (!RAW) window.scrollTo({ top: 0, behavior: 'instant' });
   render();
 });
 
