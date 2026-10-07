@@ -54,10 +54,6 @@ html {
     scroll-behavior: smooth;
     scrollbar-width: none;
     overflow-x: clip;
-
-    &::-webkit-scrollbar {
-        display: none
-    }
 }
 
 body {
@@ -66,10 +62,6 @@ body {
     color: var(--white);
     font-family: var(--text-font);
     font-weight: normal;
-
-    &::-webkit-scrollbar {
-        display: none
-    }
 }
 
 a {
@@ -82,24 +74,6 @@ a {
     }
 }
 
-button {
-    font: inherit;
-    color: inherit;
-    background: none;
-    border: 0;
-    cursor: pointer;
-    min-height: 44px;
-
-    &:focus-visible {
-        outline: 2px solid #99b0ff;
-        outline-offset: 6px
-    }
-
-    &:hover {
-        color: #bacaff
-    }
-}
-
 .sr-only {
     display: none;
 }
@@ -109,20 +83,19 @@ button {
     /* 行程总长 */
     --flip-travel: 50vh;
     /* 单格翻转占的比例 */
-    --flip-span-ratio: 0.4;
+    --flip-span-ratio: 0.38;
     --flip-span: calc(var(--flip-travel) * var(--flip-span-ratio));
     --flip-wave: calc(var(--flip-travel) - var(--flip-span));
     /* 自动翻完时的收尾时长 */
-    --flip-glide: 1.4s;
+    --flip-glide: 2s;
     --flip-ease: cubic-bezier(.3, .8, .3, 1.3);
     /* 兜底模式（不支持滚动驱动的浏览器） */
     --flip-duration: .75s;
     --flip-stagger: .4s;
     /* 滚动触发线 */
-    --flip-trigger: 48px;
+    --flip-trigger: 5vh;
     position: relative;
     height: calc(100vh + var(--flip-travel));
-
 }
 
 .hero {
@@ -324,7 +297,6 @@ button {
 .scroll {
     position: absolute;
     /* 补上浏览器 UI 当前占去的高度（vh、dvh 之差），按钮始终贴可视底 */
-    bottom: calc(22px + env(safe-area-inset-bottom));
     bottom: calc(22px + env(safe-area-inset-bottom) + (100vh - 100dvh));
     left: 50%;
     transform: translateX(-50%);
@@ -413,7 +385,7 @@ button {
 .heading-bands {
     position: absolute;
     inset: 0 0 auto;
-    height: 40%;
+    height: 50%;
     display: flex;
     flex-direction: column;
     pointer-events: none;
@@ -424,21 +396,22 @@ button {
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center center;
+    flex: 1;
 }
 
 .heading-band:nth-child(1) {
-    --end: entry 99%;
-    flex: 2;
+    --start: entry 30%;
+    --end: entry 100%;
 }
 
 .heading-band:nth-child(2) {
-    --end: entry 95%;
-    flex: 1.5;
+    --start: entry 20%;
+    --end: entry 92%;
 }
 
 .heading-band:nth-child(3) {
-    --end: entry 90%;
-    flex: 1;
+    --start: entry 10%;
+    --end: entry 85%;
 }
 
 @supports not (animation-timeline: view()) {
@@ -451,7 +424,7 @@ button {
     .heading-band {
         animation: band-veil ease-out both;
         animation-timeline: --veil;
-        animation-range: entry 30% var(--end);
+        animation-range: var(--start) var(--end);
     }
 }
 
@@ -506,7 +479,7 @@ button {
         transform: translateY(20vh);
         animation: title-transform ease-out both;
         animation-timeline: --veil;
-        animation-range: entry 60%;
+        animation-range: entry 70%;
     }
 
     .title-layer {
@@ -516,7 +489,7 @@ button {
         opacity: calc(1 - var(--rep) * 0.15);
         animation: title-gather ease-out both;
         animation-timeline: --veil;
-        animation-range: entry 50%;
+        animation-range: entry 60%;
     }
 
     .title-layer[data-core] {
@@ -1043,22 +1016,40 @@ footer {
     justify-content: space-between;
     font-size: 14px;
     letter-spacing: 1px;
-}
-/* 仅裁切原图留白；保留原始 logo 的笔触。 */
-.footer-logo {
-    position: relative;
-    display: block;
-    width: 88px;
-    aspect-ratio: 580 / 490;
     overflow: hidden;
-    mix-blend-mode: multiply;
 }
 
-.footer-logo img {
-    position: absolute;
-    width: 216.207%;
-    max-width: none;
-    height: auto;
-    left: -58.621%;
-    top: -77.551%;
+/* 水印效果 */
+.footer-logo {
+    position: relative;
+    width: 5px;
+    aspect-ratio: 1;
+    -webkit-user-select: none;
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.75;
+    mix-blend-mode: multiply;
+
+    img {
+        display: block;
+        position: absolute;
+        object-fit: cover;
+
+        &:first-child {
+            height: 88px;
+            width: 88px;
+            bottom: -40px;
+            left: 0;
+        }
+
+        &:last-child {
+            height: 124px;
+            width: 124px;
+            bottom: -60px;
+            left: 20px;
+            opacity: 0.18;
+            transform: rotate(16deg);
+            filter: blur(1px);
+        }
+    }
 }

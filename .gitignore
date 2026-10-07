@@ -6,3 +6,4 @@ preview-*.png
 *.tar.gz
 *.zip
 node_modules/
+_diag/
