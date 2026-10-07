@@ -970,10 +970,29 @@ button {
 
 /* === 没了 === */
 footer {
+    align-items: center;
     color: var(--去死吧);
     padding: 32px 24px;
     display: flex;
     justify-content: space-between;
     font-size: 14px;
     letter-spacing: 1px;
+}
+/* 仅裁切原图留白；保留原始 logo 的笔触。 */
+.footer-logo {
+    position: relative;
+    display: block;
+    width: 132px;
+    aspect-ratio: 580 / 490;
+    overflow: hidden;
+    mix-blend-mode: multiply;
+}
+
+.footer-logo img {
+    position: absolute;
+    width: 216.207%;
+    max-width: none;
+    height: auto;
+    left: -58.621%;
+    top: -77.551%;
 }
