@@ -8,4 +8,4 @@ http.createServer((req,res) => {
   const file = path.resolve(root,'.'+(name==='/'?'/index.html':name));
   if(!file.startsWith(root+path.sep)){res.writeHead(403);res.end();return;}
   fs.readFile(file,(error,data) => {if(error){res.writeHead(404);res.end('Not found');return;}res.writeHead(200,{'Content-Type':types[path.extname(file)]||'application/octet-stream','Cache-Control':'no-store'});res.end(data);});
-}).listen(5173,'127.0.0.1',() => console.log('1DREAM preview: http://127.0.0.1:5173'));
+}).listen(51800,'0.0.0.0',() => console.log('1DREAM preview: http://127.0.0.1:51800'));

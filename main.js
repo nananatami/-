@@ -1,287 +1,230 @@
+// Hero flip: scroll-driven wave; crossing the trigger plays one full locked step (old wheel/touch trap removed).
+// Clear stale anchor links; every entry starts at the hero.
+if (location.hash) history.replaceState(null, '', location.pathname + location.search);
 const hero = document.querySelector('.hero');
+const stage = document.querySelector('.hero-stage');
 const grid = document.querySelector('#tiles');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 const mobile = window.matchMedia('(max-width:700px)');
-const turn = document.querySelector('#turn');
-const flatBack=document.createElement('div');
-flatBack.className='flat-back';
-flatBack.setAttribute('aria-hidden','true');
-flatBack.append(document.querySelector('#back-scene').content.cloneNode(true));
-hero.append(flatBack);
-let tiles = [], back = false, busy = false, flipTimer;
+let back = false;
 
-let stageWidth=0,stageHeight=0;
-function syncSlices(force=false) {
-  const rect=grid.getBoundingClientRect();
-  if(!force && rect.width===stageWidth && rect.height===stageHeight)return;
-  // Read every tile before writing styles to avoid repeated forced layouts.
-  const positions=tiles.map(tile=>({x:tile.offsetLeft,y:tile.offsetTop}));
-  stageWidth=rect.width;stageHeight=rect.height;
-  grid.style.setProperty('--stage-width',`${stageWidth}px`);
-  grid.style.setProperty('--stage-height',`${stageHeight}px`);
-  tiles.forEach((tile,index)=>{
-    tile.style.setProperty('--slice-x',`${positions[index].x}px`);
-    tile.style.setProperty('--slice-y',`${positions[index].y}px`);
-  });
-}
-function peekTile(tile){
-  if(back || busy || reducedMotion.matches || tile.classList.contains('peek'))return;
+// Flip thresholds come from the CSS params block on .hero-stage (style.css).
+const cssNum = (name, fallback) => {
+  const raw = getComputedStyle(stage).getPropertyValue(name).trim();
+  // "1.1s" → 1100 (ms); px and plain numbers pass through.
+  const value = parseFloat(raw) * (/^[\d.]+s$/i.test(raw) ? 1000 : 1);
+  return Number.isFinite(value) ? value : fallback;
+};
+const TRIGGER = cssNum('--flip-trigger', 64);
+
+function peekTile(tile) {
+  if (back || window.scrollY > 4 || reducedMotion.matches || tile.classList.contains('peek')) return;
   tile.classList.add('peek');
-  setTimeout(()=>tile.classList.remove('peek'),780);
+  setTimeout(() => tile.classList.remove('peek'), 1400);
+}
+let flipDistance = 1;
+function rebuildMetrics() {
+  flipDistance = Math.max(stage.offsetHeight - hero.offsetHeight, 1);
 }
 function buildGrid() {
   grid.replaceChildren();
   const cols = mobile.matches ? 3 : 6, rows = 6;
-  tiles = Array.from({length:cols*rows}, (_,i) => {
+  Array.from({ length: cols * rows }, (_, i) => {
     const tile = document.createElement('div');
     tile.className = 'tile';
-    tile.style.setProperty('--delay', `calc(var(--flip-step) * ${(i % cols)+Math.floor(i/cols)})`);
-    for (const side of ['front','back']) {
+    tile.style.setProperty('--col', `${i % cols}`);
+    tile.style.setProperty('--row', `${Math.floor(i / cols)}`);
+    tile.style.setProperty('--wave', `${(((i % cols) + Math.floor(i / cols)) / (cols + 4)).toFixed(4)}`);
+    for (const side of ['front', 'back']) {
       const face = document.createElement('div');
       face.className = `face ${side}`;
       face.append(document.querySelector(`#${side}-scene`).content.cloneNode(true));
       tile.append(face);
     }
-    tile.addEventListener('pointerenter',e=>{
-      if(e.pointerType==='mouse')peekTile(tile);
+    tile.addEventListener('pointerenter', e => {
+      if (e.pointerType === 'mouse') peekTile(tile);
     });
-    let tapStart=null;
-    tile.addEventListener('pointerdown',e=>{
-      if(e.pointerType!=='mouse' && e.isPrimary!==false){
-        tapStart={id:e.pointerId,x:e.clientX,y:e.clientY};
+    let tapStart = null;
+    tile.addEventListener('pointerdown', e => {
+      if (e.pointerType !== 'mouse' && e.isPrimary !== false) {
+        tapStart = { id: e.pointerId, x: e.clientX, y: e.clientY };
       }
-    },{passive:true});
-    tile.addEventListener('pointerup',e=>{
-      const start=tapStart;tapStart=null;
-      if(start && e.pointerId===start.id && Math.hypot(e.clientX-start.x,e.clientY-start.y)<=10){
+    }, { passive: true });
+    tile.addEventListener('pointerup', e => {
+      const start = tapStart; tapStart = null;
+      if (start && e.pointerId === start.id && Math.hypot(e.clientX - start.x, e.clientY - start.y) <= 10) {
         peekTile(tile);
       }
-    },{passive:true});
-    tile.addEventListener('pointercancel',()=>{tapStart=null;},{passive:true});
-    tile.addEventListener('animationend',()=>tile.classList.remove('peek'));
+    }, { passive: true });
+    tile.addEventListener('pointercancel', () => { tapStart = null; }, { passive: true });
+    tile.addEventListener('animationend', () => tile.classList.remove('peek'));
     grid.append(tile);
     return tile;
   });
-  syncSlices(true);
+  rebuildMetrics();
 }
-function showSide(next, immediate=false) {
-  if(busy || next === back) return;
-  hero.classList.remove('is-static-back');
+function setSide(next) {
+  if (next === back) return;
   back = next;
-  busy = !immediate && !reducedMotion.matches;
-  tiles.forEach(tile => tile.classList.remove('peek'));
-  hero.classList.toggle('is-back',back);
+  hero.classList.toggle('is-back', back);
   document.querySelector('#about').setAttribute('aria-hidden', String(!back));
-  document.querySelector('#hero-title').setAttribute('aria-hidden',String(back));
-  turn.textContent = back ? '返回首页' : '翻到介绍';
-  turn.setAttribute('aria-label',back ? '翻回工作室首页' : '翻到工作室介绍');
+  document.querySelector('#hero-title').setAttribute('aria-hidden', String(back));
   document.querySelector('#scroll-text').textContent = back ? 'SCROLL TO DISCOVER' : 'SCROLL TO EXPLORE';
   document.querySelector('.scroll').href = back ? '#team' : '#about';
-  document.querySelector('.scroll').setAttribute('aria-label',back ? '查看团队与项目' : '了解一梦');
-  clearTimeout(flipTimer);
-  if(!busy){hero.classList.toggle('is-static-back',back);return;}
-  const timing=getComputedStyle(tiles[tiles.length-1]);
-  const duration=parseFloat(timing.transitionDuration)*1000;
-  const delay=parseFloat(timing.transitionDelay)*1000;
-  // The transition event normally finishes the flip; this covers interruption/resizing.
-  flipTimer=setTimeout(finishFlip,duration+delay+50);
+  document.querySelector('.scroll').setAttribute('aria-label', back ? '查看团队与项目' : '了解一梦');
 }
-function finishFlip(){
-  if(!busy)return;
-  clearTimeout(flipTimer);
-  busy=false;
-  hero.classList.toggle('is-static-back',back);
+function render() {
+  const y = window.scrollY;
+  const p = Math.min(Math.max(y / flipDistance, 0), 1);
+  hero.classList.toggle('is-settled-back', p >= 0.98);
+  setSide(p >= 0.5);
+  debugUpdate();
 }
-grid.addEventListener('transitionend',e=>{
-  if(e.target===tiles[tiles.length-1] && e.propertyName==='transform')finishFlip();
-});
-turn.addEventListener('click',() => {window.scrollTo({top:0,behavior:'instant'}); showSide(!back);});
-mobile.addEventListener('change',buildGrid);
-new ResizeObserver(()=>syncSlices()).observe(grid);
-function handleHeroWheel(e){
-  if(e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return;
-  if(window.scrollY <= 4 && (busy || (!back && e.deltaY>0) || (back && e.deltaY<0))) {
-    e.preventDefault();
-    if(!busy) showSide(e.deltaY>0);
-  }
+let rafId = 0, scrollDir = 0, dirMark = window.scrollY, settleTimer = 0;
+let busy = false, glidePos = null, glideToken = 0, navGuard = 0;
+const GLIDE_MS = cssNum('--flip-glide', 1100);
+function finishGlide() {
+  busy = false;
+  glidePos = null;
+  dirMark = window.scrollY;
+  render();
 }
-let wheelTrapActive=false;
-function syncHeroWheelTrap(){
-  const active=window.scrollY<=4;
-  if(active===wheelTrapActive)return;
-  wheelTrapActive=active;
-  if(active)window.addEventListener('wheel',handleHeroWheel,{passive:false});
-  else window.removeEventListener('wheel',handleHeroWheel);
-}
-window.addEventListener('scroll',syncHeroWheelTrap,{passive:true});
-syncHeroWheelTrap();
-let startTouch = null;
-let touchConsumed = false;
-hero.addEventListener('touchstart',e => {startTouch=e.touches[0].clientY;touchConsumed=false;}, {passive:true});
-hero.addEventListener('touchmove',e => {
-  if(touchConsumed){e.preventDefault();return;}
-  if(startTouch===null || window.scrollY>4) return;
-  const delta = startTouch-e.touches[0].clientY;
-  if(busy || (!back && delta>12) || (back && delta< -12)) {
-    e.preventDefault();
-    touchConsumed=true;
-    if(!busy) {showSide(delta>0); startTouch=null;}
-  }
-}, {passive:false});
-hero.addEventListener('touchend',() => {startTouch=null;touchConsumed=false;}, {passive:true});
-// Scrollbar dragging and browser-native keyboard scrolling also reveal the back.
-let previousScroll = 0;
-window.addEventListener('scroll',() => {
-  const y=window.scrollY;
-  if(!back && y>4 && y<hero.offsetHeight*.9){
-    window.scrollTo({top:0,behavior:'instant'});
-    if(!busy) showSide(true);
-    previousScroll=0;
+// Self-timed flip that locks the page while it runs: one trigger = one full screen.
+function glide(target) {
+  if (busy) return;
+  debugNote(`glide→${target}`);
+  const from = window.scrollY, delta = target - from;
+  if (reducedMotion.matches || !GLIDE_MS || Math.abs(delta) < 2) {
+    window.scrollTo({ top: target, behavior: 'instant' });
+    finishGlide();
     return;
-  } else if(back && y<=4 && previousScroll>20 && !busy){
-    showSide(false);
   }
-  previousScroll=y;
-}, {passive:true});
-document.addEventListener('keydown',e => {
-  if(e.target.closest('input,textarea,select') || (e.key===' ' && e.target.closest('button,a')) || window.scrollY>4) return;
-  const down = ['PageDown','ArrowDown',' '].includes(e.key), up = ['PageUp','ArrowUp'].includes(e.key);
-  if((!back && down) || (back && up) || (busy && (up || down))) {e.preventDefault(); if(!busy) showSide(down);}
-});
-document.querySelectorAll('a[href="#about"]').forEach(a => a.addEventListener('click',e => {
-  if(a.getAttribute('href')==='#team'){e.preventDefault();openSection('#team');return;}
-  e.preventDefault(); window.scrollTo({top:0,behavior:'instant'}); showSide(true);
-}));
-document.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click',e => {
-  e.preventDefault(); window.scrollTo({top:0,behavior:'instant'}); showSide(false);
-}));
-function openSection(hash, initial=false){
-  const target=document.querySelector(hash);
-  if(!target) return;
-  if(!back) showSide(true,initial);
-  window.scrollTo({top:target.getBoundingClientRect().top+window.scrollY,behavior:initial||reducedMotion.matches?'instant':'smooth'});
-  history.replaceState(null,'',hash);
+  const token = ++glideToken;
+  const duration = Math.max(120, GLIDE_MS * Math.min(1, Math.abs(delta) / flipDistance));
+  const t0 = performance.now();
+  busy = true;
+  glidePos = from;
+  const step = now => {
+    if (token !== glideToken) return;
+    const k = Math.min((now - t0) / duration, 1);
+    glidePos = from + delta * (1 - (1 - k) ** 3);
+    window.scrollTo({ top: glidePos, behavior: 'instant' });
+    if (k < 1) requestAnimationFrame(step);
+    else finishGlide();
+  };
+  requestAnimationFrame(step);
 }
-document.querySelectorAll('a[href="#team"],a[href="#projects"],a[href="#capabilities"]').forEach(a=>a.addEventListener('click',e=>{
-  e.preventDefault();openSection(a.getAttribute('href'));
+window.addEventListener('wheel', e => { if (busy && !e.ctrlKey) e.preventDefault(); }, { passive: false });
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  // Glide running: skip direction/trigger/settle below.
+  if (busy) {
+    if (!rafId) rafId = requestAnimationFrame(() => { rafId = 0; render(); });
+    return;
+  }
+  // 12px hysteresis: sub-threshold jitter at the end of a flick keeps the previous direction.
+  if (y - dirMark >= 12) { scrollDir = 1; dirMark = y; }
+  else if (y - dirMark <= -12) { scrollDir = -1; dirMark = y; }
+  // Crossing the trigger line plays the whole flip: one scroll = one screen.
+  if (performance.now() > navGuard && scrollDir !== 0 && y > TRIGGER && y < flipDistance - TRIGGER) {
+    glide(scrollDir > 0 ? flipDistance : 0);
+  }
+  if (!rafId) rafId = requestAnimationFrame(() => { rafId = 0; render(); });
+  clearTimeout(settleTimer);
+  settleTimer = setTimeout(settle, 100);
+}, { passive: true });
+if ('onscrollend' in window) window.addEventListener('scrollend', settle);
+// A rest inside the flip zone settles across the trigger line.
+function settle() {
+  if (busy) return;
+  const y = window.scrollY;
+  if (y <= 0 || y >= flipDistance) return;
+  debugNote(`settle y=${Math.round(y)}`);
+  const forward = scrollDir > 0 ? y > TRIGGER : y >= flipDistance - TRIGGER;
+  glide(forward ? flipDistance : 0);
+}
+window.addEventListener('resize', () => { rebuildMetrics(); render(); });
+mobile.addEventListener('change', () => { buildGrid(); render(); });
+function goTo(top) {
+  navGuard = performance.now() + 1500;
+  window.scrollTo({ top, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+}
+document.querySelectorAll('a[href="#about"]').forEach(a => a.addEventListener('click', e => {
+  if (a.getAttribute('href') === '#team') { e.preventDefault(); openSection('#team'); return; }
+  e.preventDefault(); glide(flipDistance);
 }));
-history.scrollRestoration='manual';
+document.querySelectorAll('a[href="#top"]').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault(); goTo(0);
+}));
+function openSection(hash) {
+  const target = document.querySelector(hash);
+  if (!target) return;
+  navGuard = performance.now() + 1500;
+  window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY, behavior: reducedMotion.matches ? 'instant' : 'smooth' });
+}
+document.querySelectorAll('a[href="#team"],a[href="#projects"],a[href="#capabilities"]').forEach(a => a.addEventListener('click', e => {
+  e.preventDefault(); openSection(a.getAttribute('href'));
+}));
+// Debug overlay for feel testing: add ?debug to the URL.
+const debugPanel = new URLSearchParams(location.search).has('debug') ? document.createElement('div') : null;
+if (debugPanel) {
+  debugPanel.id = 'debug-panel';
+  debugPanel.style.cssText = 'position:fixed;left:8px;top:8px;z-index:99;padding:6px 8px;background:#000c;color:#fff;font:12px/1.5 monospace;white-space:pre;pointer-events:none';
+  document.body.append(debugPanel);
+}
+let debugLines = [];
+function debugNote(text) { if (debugPanel) debugLines = [...debugLines.slice(-7), text]; }
+function debugUpdate() {
+  if (!debugPanel) return;
+  const first = document.querySelector('.tile');
+  const range = first ? (getComputedStyle(first).animationRange || 'n/a') : '-';
+  debugPanel.textContent = `y=${Math.round(window.scrollY)} D=${Math.round(flipDistance)} p=${(window.scrollY / flipDistance).toFixed(2)} dir=${scrollDir} busy=${busy ? 1 : 0} glide=${glidePos === null ? '-' : Math.round(glidePos)}\nrange0=${String(range).replace(/\s+/g, ' ')}\n${debugLines.join('\n')}`;
+}
+history.scrollRestoration = 'manual';
 buildGrid();
-window.addEventListener('load',() => {
-  if(['#team','#projects','#capabilities'].includes(location.hash)) openSection(location.hash,true);
-  else window.scrollTo({top:0,behavior:'instant'});
+render();
+window.addEventListener('load', () => {
+  window.scrollTo({ top: 0, behavior: 'instant' });
+  render();
 });
 
-// Full-width project rows, with one detail region expanded at a time.
-const projectRows=[...document.querySelectorAll('.project-row')];
-const projectButtons=projectRows.map(row=>row.querySelector('.project-toggle'));
-// Flip each title glyph in sequence while keeping one accessible button label.
-projectButtons.forEach(button=>{
-  const name=button.querySelector('.project-name');
-  const title=name.textContent;
-  button.setAttribute('aria-label',[
-    button.querySelector('.project-number').textContent,
+// Full-width project rows are native <details>; the shared name keeps one open at a time.
+const projectRows = [...document.querySelectorAll('.project-row')];
+const projectToggles = projectRows.map(row => row.querySelector('summary'));
+// One accessible summary label (number + title + one-line).
+projectToggles.forEach(summary => {
+  const title = summary.querySelector('.project-name').textContent;
+  summary.setAttribute('aria-label', [
+    summary.querySelector('.project-number').textContent,
     title,
-    button.querySelector('.project-one-line').textContent
+    summary.querySelector('.project-one-line').textContent
   ].join(' '));
-  name.replaceChildren(...Array.from(title,(glyph,index)=>{
-    const letter=document.createElement('span');
-    letter.className='project-letter';
-    letter.style.setProperty('--letter',index);
-    const front=document.createElement('span');
-    front.className='project-letter-front';
-    front.textContent=glyph;
-    const rear=front.cloneNode(true);
-    rear.className='project-letter-back';
-    rear.setAttribute('aria-hidden','true');
-    letter.append(front,rear);
-    return letter;
-  }));
-  const heading=document.createElement('span');
-  heading.className='project-heading-flipper project-heading-face';
-  heading.append(...button.childNodes);
-  button.append(heading);
 });
-let scrollIdleTimer,projectScrolling=false;
-window.addEventListener('scroll',()=>{
-  if(!projectScrolling)projectRows.forEach(row=>row.classList.remove('is-highlighted'));
-  projectScrolling=true;
-  clearTimeout(scrollIdleTimer);
-  scrollIdleTimer=setTimeout(()=>{projectScrolling=false;},180);
-},{passive:true});
-function openProject(selected){
-  projectRows.forEach((row,index)=>{
-    const open=index===selected;
-    row.classList.toggle('is-open',open);
-    projectButtons[index].setAttribute('aria-expanded',String(open));
-    const region=row.querySelector('.project-reveal');
-    region.setAttribute('aria-hidden',String(!open));
-    region.inert=!open;
-  });
-  if(document.body.classList.contains('has-custom-cursor'))updateCursorTarget(document.elementFromPoint(cursorX,cursorY));
-}
-projectButtons.forEach((button,index)=>{
-  button.addEventListener('click',()=>{
-    openProject(button.getAttribute('aria-expanded')==='true'?-1:index);
-  });
-  button.addEventListener('pointerenter',e=>{
-    if(e.pointerType!=='mouse' || projectScrolling || !window.matchMedia('(hover:hover)').matches) return;
-    button.closest('.project-row').classList.add('is-highlighted');
-  });
-  button.addEventListener('pointerleave',()=>button.closest('.project-row').classList.remove('is-highlighted'));
-  button.addEventListener('keydown',e=>{
-    let next=index;
-    if(e.key==='ArrowDown') next=(index+1)%projectButtons.length;
-    else if(e.key==='ArrowUp') next=(index+projectButtons.length-1)%projectButtons.length;
-    else if(e.key==='Home') next=0;
-    else if(e.key==='End') next=projectButtons.length-1;
+projectToggles.forEach((summary, index) => {
+  summary.addEventListener('keydown', e => {
+    let next = index;
+    if (e.key === 'ArrowDown') next = (index + 1) % projectToggles.length;
+    else if (e.key === 'ArrowUp') next = (index + projectToggles.length - 1) % projectToggles.length;
+    else if (e.key === 'Home') next = 0;
+    else if (e.key === 'End') next = projectToggles.length - 1;
     else return;
-    e.preventDefault();projectButtons[next].focus();
+    e.preventDefault(); projectToggles[next].focus();
   });
 });
-// Native cursors remain the fallback until a fine mouse pointer enters the page.
-const cursor=document.querySelector('#custom-cursor');
-const cursorSymbol=cursor.querySelector('.cursor-symbol');
-const finePointer=window.matchMedia('(hover:hover) and (pointer:fine)');
-let cursorX=0,cursorY=0,cursorFrame=null,trailX=0,trailY=0,lastCursorTime=0;
-function hideCursor(){if(cursorFrame!==null){cancelAnimationFrame(cursorFrame);cursorFrame=null;}lastCursorTime=0;document.body.classList.remove('has-custom-cursor');cursor.classList.remove('cursor-pressed');}
-function updateCursorTarget(target){
-  const control=target instanceof Element?target.closest('button,a,[role="button"]'):null;
-  cursor.classList.toggle('cursor-interactive',Boolean(control));
-  const darkSurface=target instanceof Element && target.closest('.hero,.project-visual,.project-row.is-open,.project-row.is-highlighted');
-  cursor.classList.toggle('cursor-on-dark',Boolean(darkSurface));
-  cursorSymbol.textContent='';
-}
-function drawCursor(time){
-  const staticMotion=reducedMotion.matches;
-  const dt=lastCursorTime?Math.min(time-lastCursorTime,40):16;
-  const blend=staticMotion?1:1-Math.exp(-dt/65);
-  trailX+=(cursorX-trailX)*blend;trailY+=(cursorY-trailY)*blend;
-  const dx=cursorX-trailX,dy=cursorY-trailY;
-  const base=cursor.classList.contains('cursor-interactive')?32:20;
-  cursor.style.transform=`translate3d(${trailX}px,${trailY}px,0)`;
-  cursor.style.setProperty('--cursor-width',`${base+Math.min(Math.abs(dx)*1.4,160)}px`);
-  cursor.style.setProperty('--cursor-height',`${base+Math.min(Math.abs(dy)*.75,60)}px`);
-  cursor.style.setProperty('--dot-x',`${dx}px`);cursor.style.setProperty('--dot-y',`${dy}px`);
-  document.body.classList.add('has-custom-cursor');
-  lastCursorTime=time;
-  if(!staticMotion && Math.abs(dx)+Math.abs(dy)>.12){cursorFrame=requestAnimationFrame(drawCursor);}
-  else{cursorFrame=null;lastCursorTime=0;}
-}
-window.addEventListener('pointermove',e=>{
-  if(e.pointerType!=='mouse' || !finePointer.matches){hideCursor();return;}
-  cursorX=e.clientX;cursorY=e.clientY;
-  if(!document.body.classList.contains('has-custom-cursor')){trailX=cursorX;trailY=cursorY;}
-  updateCursorTarget(e.target);
-  if(cursorFrame===null)cursorFrame=requestAnimationFrame(drawCursor);
-},{passive:true});
-window.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse'&&finePointer.matches)cursor.classList.add('cursor-pressed');},{passive:true});
-window.addEventListener('pointerup',()=>cursor.classList.remove('cursor-pressed'),{passive:true});
-document.addEventListener('click',e=>updateCursorTarget(e.target));
-document.documentElement.addEventListener('pointerleave',hideCursor);
-window.addEventListener('blur',hideCursor);
-document.addEventListener('visibilitychange',()=>{if(document.hidden)hideCursor();});
-document.addEventListener('keydown',e=>{if(e.key==='Tab')hideCursor();});
-finePointer.addEventListener('change',()=>{if(!finePointer.matches)hideCursor();});
 
-window.addEventListener('scroll',()=>{if(document.body.classList.contains('has-custom-cursor'))updateCursorTarget(document.elementFromPoint(cursorX,cursorY));},{passive:true});
+// PROJECTS title: stroke copies that gather into the solid word near the top.
+const titleBox = document.querySelector('.projects-title');
+if (titleBox) {
+  const text = titleBox.textContent.trim();
+  const LAYERS = 5;
+  titleBox.setAttribute('aria-label', text);
+  titleBox.replaceChildren(...Array.from({ length: LAYERS }, (_, i) => {
+    const layer = document.createElement('span');
+    layer.className = 'title-layer';
+    layer.style.setProperty('--rep', i);
+    layer.textContent = text;
+    if (i === 0) layer.dataset.core = '';
+    else layer.setAttribute('aria-hidden', 'true');
+    return layer;
+  }));
+}

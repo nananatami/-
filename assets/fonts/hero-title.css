@@ -16,30 +16,11 @@ version: Version 001.000
 
 postScriptName: Untitled1 */
 
-/* Dedicated font faces for 一梦工作室. */
+/* Dedicated font face for 一梦工作室. Rebuild with tools/make-hero-font.py after title changes. */
 @font-face {
   font-family: "RRPL Hero";
-  src: local("RRPL"), url("./155-43f369879c9b56f35eca3d31a39ad632.woff2") format("woff2");
+  src: local("RRPL"), url("./rrpl-logo.woff2") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: block;
-  unicode-range: U+4E00, U+4F5C, U+5DE5;
-}
-
-@font-face {
-  font-family: "RRPL Hero";
-  src: local("RRPL"), url("./155-7856e32a1734a16da398d033b17acd25.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  unicode-range: U+5BA4;
-}
-
-@font-face {
-  font-family: "RRPL Hero";
-  src: local("RRPL"), url("./155-e788fa4371fc6a267e996f9bba10f740.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  unicode-range: U+68A6;
 }

@@ -1,79 +1,348 @@
 <!doctype html>
 <html lang="zh-CN">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080808">
   <title>一梦工作室 — Design × technology</title>
   <meta name="description" content="一梦团队：以跨领域的视角，构建 AI 工具、社区自动化与数字产品。">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23002FA7'/%3E%3Ctext x='16' y='24' text-anchor='middle' font-family='Arial' font-size='25' font-weight='bold' fill='white'%3E1%3C/text%3E%3C/svg%3E">
-  <link rel="preload" href="assets/fonts/155-43f369879c9b56f35eca3d31a39ad632.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/155-7856e32a1734a16da398d033b17acd25.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/155-e788fa4371fc6a267e996f9bba10f740.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="stylesheet" href="assets/fonts/hero-title.css?v=e1773b05bafe">
-  <link rel="stylesheet" href="style.css?v=903f10f1f7b4">
-  <script src="main.js?v=82ad9ba77701" defer></script>
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 2.8125C0 1.2592 1.2592 0 2.8125 0H21.1875C22.7408 0 24 1.2592 24 2.8125V21.1875C24 22.7408 22.7408 24 21.1875 24H2.8125C1.2592 24 0 22.7408 0 21.1875V2.8125Z' fill='%23002FA7'/%3E%3Cpath d='M13.6406 5.625H16.7344C17.5628 5.625 18.2344 6.29657 18.2344 7.125V22.5C18.2344 23.3284 17.5628 24 16.7344 24H13.6406V5.625Z' fill='%23D9D9D9'/%3E%3Cpath d='M11.3438 5.625H13.6406V10.2188H12.8438C12.0153 10.2188 11.3438 9.54718 11.3438 8.71875V5.625Z' fill='%23D9D9D9'/%3E%3C/svg%3E%0A">
+  <link rel="preload" href="assets/fonts/rrpl-logo.woff2" as="font" crossorigin>
+  <link rel="stylesheet" href="assets/fonts/hero-title.css">
+  <link rel="stylesheet" href="assets/fonts/chathura.css">
+  <link rel="stylesheet" href="assets/fonts/fonts.css">
+  <link rel="stylesheet" href="style.css">
+  <script src="main.js" defer></script>
 </head>
+
 <body>
   <main>
-    <section id="top" class="hero" aria-labelledby="hero-title">
-      <div id="tiles" class="tiles" aria-hidden="true"></div>
-      <h1 id="hero-title" class="sr-only">一梦工作室</h1>
-      <div id="about" class="sr-only" aria-hidden="true">
-        <h2>Design × technology</h2>
-        <p>一梦是一家致力于通过自由且独特的想法，打造融合数字与现实、并注重“体验”的创意团队。</p>
-        <p>从社区自动化到 AI 服务，从效率工具到专业工作流，我们让复杂的需求，成为清晰、可用的数字产品。</p>
-        <p>无论基于什么创意来创作，我们都将始终从“体验”的设计出发进行构思。</p>
+    <section class="hero-stage">
+      <div id="top" class="hero" aria-labelledby="hero-title">
+        <div id="tiles" class="tiles" aria-hidden="true"></div>
+        <h1 id="hero-title" class="sr-only">一梦工作室</h1>
+        <div id="about" class="sr-only" aria-hidden="true">
+          <h2>Design × technology</h2>
+          <p>一梦（Daydreamer）是由三个来自不同行业的人组成的独立创意团队。</p>
+          <p>因为相似的兴趣，也因为偶尔会有“要不要真的试试看”的想法，我们渐渐走到了一起。</p>
+          <p>从社区自动化、设计、数字产品、效率工具——只要它足够有趣，也值得被认真解决，我们就愿意试试看。</p>
+          <p>我们希望以设计、技术与不同领域的经验，让有趣的想法不止停留在想象，而成为真正可用、可持续的产品与体验。</p>
+        </div>
+        <a class="scroll" href="#about" aria-label="了解一梦"><span id="scroll-text" class="sr-only">SCROLL TO
+            EXPLORE</span><svg class="scroll-orbit" viewBox="0 0 120 120" aria-hidden="true">
+            <defs>
+              <path id="scroll-orbit-path" d="M60,12 a48,48 0 1,1 0,96 a48,48 0 1,1 0,-96" />
+            </defs><text>
+              <textPath href="#scroll-orbit-path" startOffset="0%" textLength="142" lengthAdjust="spacing">SCROLL DOWN
+                <tspan class="orbit-dot"> · </tspan>
+              </textPath>
+            </text><text>
+              <textPath href="#scroll-orbit-path" startOffset="50%" textLength="142" lengthAdjust="spacing">SCROLL DOWN
+                <tspan class="orbit-dot"> · </tspan>
+              </textPath>
+            </text>
+          </svg><span class="scroll-arrow" aria-hidden="true">↓</span></a>
+        <span class="edge-label">© 一梦工作室</span>
       </div>
-      <a class="scroll" href="#about" aria-label="了解一梦"><span id="scroll-text" class="sr-only">SCROLL TO EXPLORE</span><svg class="scroll-orbit" viewBox="0 0 120 120" aria-hidden="true"><defs><path id="scroll-orbit-path" d="M60,12 a48,48 0 1,1 0,96 a48,48 0 1,1 0,-96"/></defs><text><textPath href="#scroll-orbit-path" startOffset="0%" textLength="142" lengthAdjust="spacing">SCROLL DOWN<tspan class="orbit-dot"> · </tspan></textPath></text><text><textPath href="#scroll-orbit-path" startOffset="50%" textLength="142" lengthAdjust="spacing">SCROLL DOWN<tspan class="orbit-dot"> · </tspan></textPath></text></svg><span class="scroll-arrow" aria-hidden="true">↓</span></a>
-      <span class="edge-label">© 一梦工作室</span>
-      <button id="turn" class="interaction-hint" aria-label="翻到工作室介绍">翻到介绍</button>
     </section>
-<div class="project-gradient" id="team">
-<div class="aura-bg" aria-hidden="true"><div class="aura-layer aura-layer-1"></div><div class="aura-layer aura-layer-2"></div></div>
-<section id="projects" class="projects-accordion" aria-labelledby="projects-title">
-<div class="projects-heading"><h2 id="projects-title">PROJECTS</h2><p>产品实践 / 项目与成果</p></div>
-<div class="project-list"><article class="project-row" data-project-row="community">
-<h3 class="project-row-heading"><button class="project-toggle" id="project-community" aria-expanded="false" aria-controls="panel-community"><span class="project-number">01</span><span class="project-heading-copy"><span class="project-name">社区智能运营中台</span><span class="project-one-line">面向数万人社群的全天候自动化运营与安全管理。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
-<div class="project-reveal" id="panel-community" role="region" aria-labelledby="project-community" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">COMMUNITY OPERATIONS</p><p class="project-summary">面向数万人社群，整合成员审核、权限分配、自动答疑、反诈拦截，以及资源分类、归档与广播。支持全天候自动处理常规任务，降低人工值守成本，提升响应效率与社区安全。</p><dl><dt>技术</dt><dd>Python、discord.py、asyncio、SQLite、规则校验与角色权限管理。</dd></dl><div class="project-tags"><span>Python</span><span>discord.py</span><span>asyncio</span><span>SQLite</span></div></div><div class="project-visual"><div class="visual-top"><span>社区智能运营中台</span><span>功能流程示意</span></div><div class="project-total"><span>社区成员</span><div><strong>62,000</strong><small>人</small></div></div><div class="system-flow"><span>成员审核</span><i>→</i><span>权限分配</span><i>→</i><span>任务处理</span></div><div class="visual-stats"><div><strong class="stat-text">自动答疑</strong><span>常规响应</span></div><div><strong class="stat-text">反诈拦截</strong><span>社区安全</span></div><div><strong class="stat-text">资源归档</strong><span>分类与广播</span></div></div></div></div></div></div>
-</article>
-<article class="project-row" data-project-row="frontend">
-<h3 class="project-row-heading"><button class="project-toggle" id="project-frontend" aria-expanded="false" aria-controls="panel-frontend"><span class="project-number">02</span><span class="project-heading-copy"><span class="project-name">前端开发与交互设计</span><span class="project-one-line">网页设计、直播间美化、原生 Web 组件与动效交互。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
-<div class="project-reveal" id="panel-frontend" role="region" aria-labelledby="project-frontend" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">FRONTEND & INTERACTION</p><p class="project-summary">提供网页设计、CSS 美化、Stream 直播间全套美化。自研不依赖前端框架、可单文件引入的 Web 组件，并落地多个动效交互站点，兼顾开发复用与视觉体验。</p><dl><dt>技术</dt><dd>HTML、CSS、JavaScript、原生 Web 组件与网页动效。</dd></dl><div class="project-tags"><span>HTML</span><span>CSS</span><span>JavaScript</span><span>Web 组件</span></div></div><div class="project-visual"><div class="visual-top"><span>前端开发与交互设计</span><span>功能流程示意</span></div><div class="system-flow"><span>视觉设计</span><i>→</i><span>组件开发</span><i>→</i><span>交互落地</span></div><div class="visual-stats"><div><strong class="stat-text">网页设计</strong><span>视觉与布局</span></div><div><strong class="stat-text">直播美化</strong><span>完整视觉呈现</span></div><div><strong class="stat-text">原生组件</strong><span>单文件引入</span></div></div></div></div></div></div>
-</article>
-<article class="project-row" data-project-row="ai">
-<h3 class="project-row-heading"><button class="project-toggle" id="project-ai" aria-expanded="false" aria-controls="panel-ai"><span class="project-number">03</span><span class="project-heading-copy"><span class="project-name">多模型 AI 统一网关</span><span class="project-one-line">统一模型调用入口，集中管理密钥、用量与配额。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
-<div class="project-reveal" id="panel-ai" role="region" aria-labelledby="project-ai" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">MULTI-MODEL AI GATEWAY</p><p class="project-summary">聚合多家 AI 模型，提供统一调用入口、密钥托管、用量统计与配额管理。应用通过统一接口调用已接入模型，减少重复适配与分散管理密钥的成本。</p><dl><dt>技术</dt><dd>API 集成、模型路由、密钥管理、用量统计与配额控制。</dd></dl><div class="project-tags"><span>API 集成</span><span>模型路由</span><span>密钥管理</span><span>配额控制</span></div></div><div class="project-visual"><div class="visual-top"><span>多模型 AI 统一网关</span><span>功能流程示意</span></div><div class="system-flow"><span>业务应用</span><i>→</i><span>统一接口</span><i>→</i><span>模型路由</span></div><div class="visual-stats"><div><strong class="stat-text">密钥托管</strong><span>集中管理</span></div><div><strong class="stat-text">用量统计</strong><span>调用记录</span></div><div><strong class="stat-text">配额控制</strong><span>使用额度</span></div></div></div></div></div></div>
-</article>
-<article class="project-row" data-project-row="aigc">
-<h3 class="project-row-heading"><button class="project-toggle" id="project-aigc" aria-expanded="false" aria-controls="panel-aigc"><span class="project-number">04</span><span class="project-heading-copy"><span class="project-name">AIGC 创作工作台</span><span class="project-one-line">可视化生成图像与语音，管理本地创作产物。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
-<div class="project-reveal" id="panel-aigc" role="region" aria-labelledby="project-aigc" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">AIGC CREATIVE WORKSPACE</p><p class="project-summary">集成生图与语音生成服务，提供可视化操作界面，支持生成产物的本地归档与管理。</p><dl><dt>技术</dt><dd>图像与语音模型接口集成、可视化交互、本地文件管理。</dd></dl><div class="project-tags"><span>图像生成</span><span>语音生成</span><span>可视化交互</span><span>本地归档</span></div></div><div class="project-visual"><div class="visual-top"><span>AIGC 创作工作台</span><span>功能流程示意</span></div><div class="system-flow"><span>可视化操作</span><i>→</i><span>模型生成</span><i>→</i><span>本地归档</span></div><div class="visual-stats"><div><strong class="stat-text">图像生成</strong><span>生图服务</span></div><div><strong class="stat-text">语音生成</strong><span>音频产物</span></div><div><strong class="stat-text">本地管理</strong><span>归档与整理</span></div></div></div></div></div></div>
-</article>
-<article class="project-row" data-project-row="translation">
-<h3 class="project-row-heading"><button class="project-toggle" id="project-translation" aria-expanded="false" aria-controls="panel-translation"><span class="project-number">05</span><span class="project-heading-copy"><span class="project-name">智能翻译工作流</span><span class="project-one-line">连接模型翻译、双语对照、术语检查与人工校对。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
-<div class="project-reveal" id="panel-translation" role="region" aria-labelledby="project-translation" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">INTELLIGENT TRANSLATION</p><p class="project-summary">串联文本输入、模型翻译、双语对照、术语检查与人工校对，支持社区资料、品牌文案和活动内容的翻译整理。</p><dl><dt>技术</dt><dd>模型接口集成、任务状态管理、术语检查。</dd></dl><div class="project-tags"><span>模型接口</span><span>双语对照</span><span>术语检查</span><span>人工校对</span></div></div><div class="project-visual"><div class="visual-top"><span>智能翻译工作流</span><span>功能流程示意</span></div><div class="system-flow"><span>文本输入</span><i>→</i><span>模型翻译</span><i>→</i><span>人工校对</span></div><div class="visual-stats"><div><strong class="stat-text">双语对照</strong><span>逐项核对</span></div><div><strong class="stat-text">术语检查</strong><span>表达一致性</span></div><div><strong class="stat-text">任务管理</strong><span>进度与状态</span></div></div></div></div></div></div>
-</article>
-<article class="project-row" data-project-row="wellness">
-<h3 class="project-row-heading"><button class="project-toggle" id="project-wellness" aria-expanded="false" aria-controls="panel-wellness"><span class="project-number">06</span><span class="project-heading-copy"><span class="project-name">运动与饮食陪伴助手</span><span class="project-one-line">整理日常运动与饮食记录，连接打卡、任务与趋势。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
-<div class="project-reveal" id="panel-wellness" role="region" aria-labelledby="project-wellness" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">FITNESS & NUTRITION COMPANION</p><p class="project-summary">将运动截图、食物照片与手动打卡整理为日常记录，支持任务、排行榜与趋势查看。识别结果经用户确认后入库，个人资料采用私密反馈。</p><dl><dt>技术</dt><dd>多模态图片识别、结构化数据处理、用户确认流程。</dd></dl><div class="project-tags"><span>多模态识别</span><span>结构化数据</span><span>用户确认</span><span>私密反馈</span></div></div><div class="project-visual"><div class="visual-top"><span>运动与饮食陪伴助手</span><span>功能流程示意</span></div><div class="system-flow"><span>截图与照片</span><i>→</i><span>用户确认</span><i>→</i><span>记录入库</span></div><div class="visual-stats"><div><strong class="stat-text">日常打卡</strong><span>运动与饮食</span></div><div><strong class="stat-text">任务排行</strong><span>参与与陪伴</span></div><div><strong class="stat-text">趋势查看</strong><span>记录变化</span></div></div></div></div></div></div>
-</article>
-<article class="project-row" data-project-row="relay">
-<h3 class="project-row-heading"><button class="project-toggle" id="project-relay" aria-expanded="false" aria-controls="panel-relay"><span class="project-number">07</span><span class="project-heading-copy"><span class="project-name">网络中继与反向代理工具</span><span class="project-one-line">模型接口本地中继、请求转发与链路诊断。</span></span><span class="project-plus" aria-hidden="true"></span></button></h3>
-<div class="project-reveal" id="panel-relay" role="region" aria-labelledby="project-relay" aria-hidden="true" inert><div class="project-reveal-inner"><div class="project-details"><div class="project-description"><p class="project-category">NETWORK RELAY & REVERSE PROXY</p><p class="project-summary">提供模型接口的本地中继与请求转发，集中管理连接状态、自动重连和实时日志，支持链路诊断。</p><dl><dt>技术</dt><dd>WebSocket、反向代理、流式传输与日志管理。</dd></dl><div class="project-tags"><span>WebSocket</span><span>反向代理</span><span>流式传输</span><span>日志管理</span></div></div><div class="project-visual"><div class="visual-top"><span>网络中继与反向代理工具</span><span>功能流程示意</span></div><div class="system-flow"><span>本地中继</span><i>→</i><span>请求转发</span><i>→</i><span>模型接口</span></div><div class="visual-stats"><div><strong class="stat-text">连接状态</strong><span>集中查看</span></div><div><strong class="stat-text">自动重连</strong><span>连接恢复</span></div><div><strong class="stat-text">实时日志</strong><span>链路诊断</span></div></div></div></div></div></div>
-</article></div>
-<p class="data-caption">社区成员规模：62,000 人。各业务模块的功能流程为示意展示。</p>
-</section></div>
+
+    <section id="projects" class="projects-accordion" aria-labelledby="projects-title">
+      <div class="projects-heading">
+        <div class="heading-bands" aria-hidden="true">
+          <div class="heading-band"></div>
+          <div class="heading-band"></div>
+          <div class="heading-band"></div>
+        </div>
+        <h2 class="projects-title">PROJECTS</h2>
+        <p>产品实践 | 项目与成果</p>
+      </div>
+      <div class="project-list">
+
+        <details class="project-row" name="projects">
+          <summary>
+            <h3>
+              <span class="project-number">01</span>
+              <span class="project-heading-copy">
+                <span class="project-name">社区智能运营中台</span>
+                <span class="project-one-line">面向数万人社群的全天候自动化运营与安全管理。</span>
+              </span>
+              <span class="project-plus" aria-hidden="true"></span>
+            </h3>
+          </summary>
+
+          <div class="project-details">
+            <div class="project-description">
+              <p class="project-category">COMMUNITY OPERATIONS</p>
+              <p class="project-summary">
+                <span>面向数万人社群，整合成员审核、权限分配、自动答疑、反诈拦截，以及资源分类、归档与广播。支持全天候自动处理常规任务，降低人工值守成本，提升响应效率与社区安全。</span>
+              </p>
+
+              <dl>
+                <dt>技术</dt>
+                <dd>Python、discord.py、asyncio、SQLite、规则校验与角色权限管理。</dd>
+              </dl>
+
+              <div class="project-tags">
+                <span>Python</span><span>discord.py</span><span>asyncio</span><span>SQLite</span>
+              </div>
+
+            </div>
+
+            <div class="project-visual">
+              <div class="visual-top"><span>社区智能运营中台</span><span>功能流程示意</span></div>
+              <div class="project-total">
+                <span>社区成员</span>
+                <div>
+                  <b>62,000</b><small>人</small>
+                </div>
+              </div>
+              <div class="system-flow"><span>成员审核</span><i>→</i><span>权限分配</span><i>→</i><span>任务处理</span></div>
+              <div class="visual-stats">
+                <div><strong>自动答疑</strong><span>常规响应</span></div>
+                <div><strong>反诈拦截</strong><span>社区安全</span></div>
+                <div><strong>资源归档</strong><span>分类与广播</span></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="project-row" name="projects">
+          <summary>
+            <h3>
+              <span class="project-number">02</span>
+              <span class="project-heading-copy">
+                <span class="project-name">前端开发与交互设计</span>
+                <span class="project-one-line">网页设计、直播间美化、原生 Web组件与动效交互。</span>
+              </span>
+              <span class="project-plus" aria-hidden="true"></span>
+            </h3>
+          </summary>
+
+          <div class="project-details">
+            <div class="project-description">
+              <p class="project-category">FRONTEND & INTERACTION</p>
+              <p class="project-summary">
+                <span>提供网页设计、CSS 美化、Stream 直播间全套美化。自研不依赖前端框架、可单文件引入的 Web 组件，并落地多个动效交互站点，兼顾开发复用与视觉体验。</span>
+              </p>
+
+              <dl>
+                <dt>技术</dt>
+                <dd>HTML、CSS、JavaScript、原生 Web 组件与网页动效。</dd>
+              </dl>
+
+              <div class="project-tags">
+                <span>HTML</span><span>CSS</span><span>JavaScript</span><span>Web组件</span>
+              </div>
+            </div>
+            <div class="project-visual">
+              <div class="visual-top"><span>前端开发与交互设计</span><span>功能流程示意</span></div>
+              <div class="system-flow"><span>视觉设计</span><i>→</i><span>组件开发</span><i>→</i><span>交互落地</span></div>
+              <div class="visual-stats">
+                <div><strong>网页设计</strong><span>视觉与布局</span></div>
+                <div><strong>直播美化</strong><span>完整视觉呈现</span></div>
+                <div><strong>原生组件</strong><span>单文件引入</span></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="project-row" name="projects">
+          <summary>
+            <h3>
+              <span class="project-number">03</span>
+              <span class="project-heading-copy">
+                <span class="project-name">多模型 AI 统一网关</span>
+                <span class="project-one-line">统一模型调用入口，集中管理密钥、用量与配额。</span>
+              </span>
+              <span class="project-plus" aria-hidden="true">
+              </span>
+            </h3>
+          </summary>
+
+
+          <div class="project-details">
+            <div class="project-description">
+              <p class="project-category">MULTI-MODEL AI GATEWAY</p>
+              <p class="project-summary"><span>聚合多家 AI
+                  模型，提供统一调用入口、密钥托管、用量统计与配额管理。应用通过统一接口调用已接入模型，减少重复适配与分散管理密钥的成本。</span></p>
+              <dl>
+                <dt>技术</dt>
+                <dd>API 集成、模型路由、密钥管理、用量统计与配额控制。</dd>
+              </dl>
+              <div class="project-tags"><span>API 集成</span><span>模型路由</span><span>密钥管理</span><span>配额控制</span>
+              </div>
+            </div>
+            <div class="project-visual">
+              <div class="visual-top"><span>多模型 AI 统一网关</span><span>功能流程示意</span></div>
+              <div class="system-flow"><span>业务应用</span><i>→</i><span>统一接口</span><i>→</i><span>模型路由</span></div>
+              <div class="visual-stats">
+                <div><strong>密钥托管</strong><span>集中管理</span></div>
+                <div><strong>用量统计</strong><span>调用记录</span></div>
+                <div><strong>配额控制</strong><span>使用额度</span></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="project-row" name="projects">
+          <summary>
+            <h3>
+              <span class="project-number">04</span>
+              <span class="project-heading-copy">
+                <span class="project-name">AIGC 创作工作台</span>
+                <span class="project-one-line">可视化生成图像与语音，管理本地创作产物。</span>
+              </span><span class="project-plus" aria-hidden="true"></span>
+            </h3>
+          </summary>
+
+          <div class="project-details">
+            <div class="project-description">
+              <p class="project-category">AIGC CREATIVE WORKSPACE</p>
+              <p class="project-summary"><span>集成生图与语音生成服务，提供可视化操作界面，支持生成产物的本地归档与管理。</span></p>
+              <dl>
+                <dt>技术</dt>
+                <dd>图像与语音模型接口集成、可视化交互、本地文件管理。</dd>
+              </dl>
+              <div class="project-tags"><span>图像生成</span><span>语音生成</span><span>可视化交互</span><span>本地归档</span>
+              </div>
+            </div>
+            <div class="project-visual">
+              <div class="visual-top"><span>AIGC 创作工作台</span><span>功能流程示意</span></div>
+              <div class="system-flow"><span>可视化操作</span><i>→</i><span>模型生成</span><i>→</i><span>本地归档</span></div>
+              <div class="visual-stats">
+                <div><strong>图像生成</strong><span>生图服务</span></div>
+                <div><strong>语音生成</strong><span>音频产物</span></div>
+                <div><strong>本地管理</strong><span>归档与整理</span></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="project-row" name="projects">
+          <summary>
+            <h3><span class="project-number">05</span><span class="project-heading-copy"><span
+                  class="project-name">智能翻译工作流</span><span
+                  class="project-one-line">连接模型翻译、双语对照、术语检查与人工校对。</span></span><span class="project-plus"
+                aria-hidden="true"></span></h3>
+          </summary>
+
+          <div class="project-details">
+            <div class="project-description">
+              <p class="project-category">INTELLIGENT TRANSLATION</p>
+              <p class="project-summary"><span>串联文本输入、模型翻译、双语对照、术语检查与人工校对，支持社区资料、品牌文案和活动内容的翻译整理。</span></p>
+              <dl>
+                <dt>技术</dt>
+                <dd>模型接口集成、任务状态管理、术语检查。</dd>
+              </dl>
+              <div class="project-tags"><span>模型接口</span><span>双语对照</span><span>术语检查</span><span>人工校对</span></div>
+            </div>
+            <div class="project-visual">
+              <div class="visual-top"><span>智能翻译工作流</span><span>功能流程示意</span></div>
+              <div class="system-flow"><span>文本输入</span><i>→</i><span>模型翻译</span><i>→</i><span>人工校对</span></div>
+              <div class="visual-stats">
+                <div><strong>双语对照</strong><span>逐项核对</span></div>
+                <div><strong>术语检查</strong><span>表达一致性</span></div>
+                <div><strong>任务管理</strong><span>进度与状态</span></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="project-row" name="projects">
+          <summary>
+            <h3><span class="project-number">06</span><span class="project-heading-copy"><span
+                  class="project-name">运动与饮食陪伴助手</span><span
+                  class="project-one-line">整理日常运动与饮食记录，连接打卡、任务与趋势。</span></span><span class="project-plus"
+                aria-hidden="true"></span></h3>
+          </summary>
+
+          <div class="project-details">
+            <div class="project-description">
+              <p class="project-category">FITNESS & NUTRITION COMPANION</p>
+              <p class="project-summary"><span>将运动截图、食物照片与手动打卡整理为日常记录，支持任务、排行榜与趋势查看。识别结果经用户确认后入库，个人资料采用私密反馈。</span></p>
+              <dl>
+                <dt>技术</dt>
+                <dd>多模态图片识别、结构化数据处理、用户确认流程。</dd>
+              </dl>
+              <div class="project-tags"><span>多模态识别</span><span>结构化数据</span><span>用户确认</span><span>私密反馈</span>
+              </div>
+            </div>
+            <div class="project-visual">
+              <div class="visual-top"><span>运动与饮食陪伴助手</span><span>功能流程示意</span></div>
+              <div class="system-flow"><span>截图与照片</span><i>→</i><span>用户确认</span><i>→</i><span>记录入库</span></div>
+              <div class="visual-stats">
+                <div><strong>日常打卡</strong><span>运动与饮食</span></div>
+                <div><strong>任务排行</strong><span>参与与陪伴</span></div>
+                <div><strong>趋势查看</strong><span>记录变化</span></div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="project-row" name="projects">
+          <summary>
+            <h3><span class="project-number">07</span><span class="project-heading-copy"><span
+                  class="project-name">网络中继与反向代理工具</span><span
+                  class="project-one-line">模型接口本地中继、请求转发与链路诊断。</span></span><span class="project-plus"
+                aria-hidden="true"></span></h3>
+          </summary>
+
+          <div class="project-details">
+            <div class="project-description">
+              <p class="project-category">NETWORK RELAY & REVERSE PROXY</p>
+              <p class="project-summary"><span>提供模型接口的本地中继与请求转发，集中管理连接状态、自动重连和实时日志，支持链路诊断。</span></p>
+              <dl>
+                <dt>技术</dt>
+                <dd>WebSocket、反向代理、流式传输与日志管理。</dd>
+              </dl>
+              <div class="project-tags"><span>WebSocket</span><span>反向代理</span><span>流式传输</span><span>日志管理</span>
+              </div>
+            </div>
+            <div class="project-visual">
+              <div class="visual-top"><span>网络中继与反向代理工具</span><span>功能流程示意</span></div>
+              <div class="system-flow"><span>本地中继</span><i>→</i><span>请求转发</span><i>→</i><span>模型接口</span></div>
+              <div class="visual-stats">
+                <div><strong>连接状态</strong><span>集中查看</span></div>
+                <div><strong>自动重连</strong><span>连接恢复</span></div>
+                <div><strong>实时日志</strong><span>链路诊断</span></div>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+      <p class="data-caption">各业务模块的功能流程为示意展示。</p>
+    </section>
   </main>
+
   <footer><span>一梦工作室</span><a href="#top">回到顶部 ↑</a></footer>
-  <div id="custom-cursor" aria-hidden="true"><span class="cursor-ring"><span class="cursor-symbol"></span></span><span class="cursor-dot"></span></div>
-  <template id="front-scene"><div class="scene front-scene"><div class="hero-copy"><div class="studio-title">一梦工作室</div></div></div></template>
-  <template id="back-scene"><div class="scene back-scene"><div class="blue-intro">
-    <div class="intro-title"><span>Design</span><span class="intro-second"><span class="multiply">×</span> technology</span></div>
-    <div class="intro-copy">
-      <p>一梦是一家致力于通过自由且独特的想法，打造融合数字与现实、并注重“体验”的创意团队。</p>
-      <p>从社区自动化到 AI 服务，从效率工具到专业工作流，我们让复杂的需求，成为清晰、可用的数字产品。</p>
-      <p>无论基于什么创意来创作，我们都将始终从“体验”的设计出发进行构思。</p>
+
+  <template id="front-scene">
+    <div class="scene front-scene">
+      <div class="hero-copy">
+        <div class="studio-title">一梦工作室</div>
+      </div>
     </div>
-  </div></div></template>
+  </template>
+
+  <template id="back-scene">
+    <div class="scene back-scene">
+      <div class="blue-intro">
+        <div class="intro-title">
+          <span>Design</span>
+          <span class="intro-second"><span class="multiply">×</span>technology</span>
+        </div>
+        <div class="intro-copy">
+          <p>一梦（Daydreamer）是由三个来自不同行业的人组成的独立创意团队。</p>
+          <p>因为相似的兴趣，也因为偶尔会有“要不要真的试试看”的想法，我们渐渐走到了一起。</p>
+          <p>从社区自动化、设计、数字产品、效率工具——只要它足够有趣，也值得被认真解决，我们就愿意试试看。</p>
+          <p>我们希望以设计、技术与不同领域的经验，让有趣的想法不止停留在想象，而成为真正可用、可持续的产品与体验。</p>
+        </div>
+      </div>
+    </div>
+  </template>
+
 </body>
+
 </html>

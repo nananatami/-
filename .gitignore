@@ -2,8 +2,6 @@
 review-video/
 review-recording.py
 preview-*.png
-.sites-runtime/
-.sites-checkout*/
 *.tar
 *.tar.gz
 *.zip
